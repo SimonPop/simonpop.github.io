@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SparkCard from '../../components/SparkCard.astro';
-import SparkIllustration from '../../components/SparkIllustration.astro';
+import SparkOrb from '../../components/SparkOrb.astro';
 import { SPARK_PALETTE } from '../../lib/spark-art';
 import { THEME_META } from '../../lib/themes';
 
@@ -21,13 +21,13 @@ const heroSeed = heroSpark ? `hero-${heroSpark.id}` : 'hero-spark';
 
 <BaseLayout title="Sparks — Simon Popelier" description="Short-form notes and ideas.">
 	<h1>Sparks</h1>
-	<p class="sparks-intro">Short-form notes. Entry points into the longer articles, or ideas on their own.</p>
+	<p class="sparks-intro">Short-form notes.</p>
 
 	<div class="spark-random-hero">
-		<SparkIllustration seed={heroSeed} color={SPARK_PALETTE[0]} colors={SPARK_PALETTE} size={88} />
+		<SparkOrb seed={heroSeed} colors={SPARK_PALETTE} size={148} ariaLabel="Jump to a random spark" />
 		<div class="spark-random-hero-text">
 			<p class="spark-random-label">Not sure where to start?</p>
-			<button class="random-spark" id="random-spark">Jump to a random spark →</button>
+			<p class="spark-random-hint">Click the spark to jump to a random one.</p>
 		</div>
 	</div>
 
@@ -42,7 +42,6 @@ const heroSeed = heroSpark ? `hero-${heroSpark.id}` : 'hero-spark';
 				))
 			}
 		</div>
-		<button class="layout-toggle" id="layout-toggle" aria-pressed="false">Row layout</button>
 	</div>
 
 	<div class="spark-grid" id="spark-grid">
@@ -56,9 +55,7 @@ const heroSeed = heroSpark ? `hero-${heroSpark.id}` : 'hero-spark';
 </BaseLayout>
 
 <script>
-	const grid = document.getElementById('spark-grid');
 	const chips = document.querySelectorAll<HTMLButtonElement>('.filter-chip');
-	const layoutToggle = document.getElementById('layout-toggle');
 	const randomBtn = document.getElementById('random-spark');
 
 	chips.forEach((chip) => {
@@ -70,12 +67,6 @@ const heroSeed = heroSpark ? `hero-${heroSpark.id}` : 'hero-spark';
 				card.style.display = match ? '' : 'none';
 			});
 		});
-	});
-
-	layoutToggle?.addEventListener('click', () => {
-		const isRow = grid?.classList.toggle('spark-grid--row');
-		layoutToggle.setAttribute('aria-pressed', String(!!isRow));
-		layoutToggle.textContent = isRow ? 'Grid layout' : 'Row layout';
 	});
 
 	randomBtn?.addEventListener('click', () => {

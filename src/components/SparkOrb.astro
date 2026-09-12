@@ -1,0 +1,304 @@
+---
+/*
+ * A liquid spark held inside a glass sphere: a few soft blobs of colour,
+ * merged into one gooey mass via an SVG feColorMatrix filter (blur, then
+ * sharpen the alpha channel back up — the classic "goo" trick), tinted by
+ * additive blending so overlaps glow rather than muddy. The whole sphere is
+ * a <button>: hovering speeds the blobs up and focus does the same, so
+ * keyboard users get the same "wake up" cue as a mouse hover.
+ */
+import { hashSeed, mulberry32, SPARK_PALETTE } from '../lib/spark-art';
+
+interface Props {
+	seed: string;
+	colors?: string[];
+	size?: number;
+	id?: string;
+	ariaLabel?: string;
+}
+
+const { seed, colors = SPARK_PALETTE, size = 148, id = 'random-spark', ariaLabel = 'Jump to a random spark' } = Astro.props;
+const filterId = `${id}-goo`;
+---
+
+<button type="button" class="spark-orb" id={id} aria-label={ariaLabel} style={`--spark-orb-size: ${size}px;`}>
+	<svg class="spark-orb-defs" width="0" height="0" aria-hidden="true" focusable="false">
+		<filter id={filterId}>
+			<feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blurred" />
+			<!-- A steep alpha threshold (the old 20/-9) leaves only a ~0.05-wide
+			     input-alpha band between "invisible" and "fully opaque", so any
+			     per-frame antialiasing noise near that band flips pixels on and
+			     off — the flicker/strobing seen once droplets grow and overlap
+			     more (hover/touch). Widening the band trades a little edge
+			     crispness for a filter that stays stable frame to frame. -->
+			<feColorMatrix in="blurred" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 10 -4" />
+		</filter>
+	</svg>
+	<span class="spark-orb-shell" aria-hidden="true">
+		<canvas
+			class="spark-orb-canvas"
+			width={size}
+			height={size}
+			data-seed={seed}
+			data-colors={colors.join(',')}
+			style={`filter: url(#${filterId});`}
+		></canvas>
+		<span class="spark-orb-sheen"></span>
+		<span class="spark-orb-highlight"></span>
+	</span>
+</button>
+
+<style>
+	.spark-orb {
+		--spark-orb-size: 148px;
+		width: var(--spark-orb-size);
+		height: var(--spark-orb-size);
+		flex: none;
+		padding: 0;
+		border: none;
+		background: none;
+		cursor: pointer;
+		border-radius: 50%;
+		position: relative;
+		-webkit-tap-highlight-color: transparent;
+		filter: drop-shadow(0 10px 18px color-mix(in srgb, var(--accent) 24%, transparent));
+		transition: filter 0.35s ease;
+	}
+
+	.spark-orb-defs {
+		position: absolute;
+		width: 0;
+		height: 0;
+	}
+
+	.spark-orb:hover,
+	.spark-orb:focus-visible {
+		filter: drop-shadow(0 22px 36px color-mix(in srgb, var(--accent) 55%, transparent));
+	}
+
+	.spark-orb:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 6px;
+	}
+
+	.spark-orb-shell {
+		display: block;
+		position: relative;
+		width: 100%;
+		height: 100%;
+		border-radius: 50%;
+		overflow: hidden;
+		background: radial-gradient(
+			circle at 32% 26%,
+			color-mix(in srgb, var(--accent) 5%, transparent) 0%,
+			transparent 40%,
+			color-mix(in srgb, var(--accent) 14%, transparent) 100%
+		);
+		backdrop-filter: blur(1px);
+		box-shadow:
+			inset 0 -14px 22px -10px color-mix(in srgb, var(--accent) 45%, transparent),
+			inset 0 10px 16px -10px rgba(255, 255, 255, 0.45),
+			inset 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+		/* The lift/scale lives on this inner element rather than on the
+		   button itself: transforming the button would move its own
+		   hit-tested box under the cursor mid-transition, which fired
+		   pointerenter/pointerleave back and forth until it settled — the
+		   "blinking" on hover. A plain ease-out (no overshoot) keeps this
+		   the only motion happening during that window: a "back"/elastic
+		   curve bounces past its target and back, which — layered on top
+		   of the canvas's own idle-to-active ramp — read as the orb
+		   hesitating between two modes instead of settling once. */
+		transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.spark-orb:hover .spark-orb-shell,
+	.spark-orb:focus-visible .spark-orb-shell {
+		transform: translateY(-4px) scale(1.1);
+	}
+
+	.spark-orb:active .spark-orb-shell {
+		transform: translateY(-1px) scale(0.96);
+	}
+
+	.spark-orb-canvas {
+		position: absolute;
+		inset: 6%;
+		width: 88%;
+		height: 88%;
+	}
+
+	.spark-orb-sheen {
+		position: absolute;
+		inset: 0;
+		border-radius: 50%;
+		background: radial-gradient(circle at 62% 72%, color-mix(in srgb, var(--accent) 30%, transparent) 0%, transparent 55%);
+		mix-blend-mode: soft-light;
+		pointer-events: none;
+	}
+
+	.spark-orb-highlight {
+		position: absolute;
+		top: 11%;
+		left: 16%;
+		width: 34%;
+		height: 20%;
+		border-radius: 50%;
+		background: radial-gradient(closest-side, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0) 70%);
+		filter: blur(1px);
+		transform: rotate(-20deg);
+		pointer-events: none;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.spark-orb,
+		.spark-orb-shell {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	import { hashSeed, mulberry32 } from '../lib/spark-art';
+
+	interface Droplet {
+		angleOffset: number;
+		angleDrift: number;
+		speed: number;
+		phase: number;
+		radius: number;
+		color: string;
+	}
+
+	function setupOrb(orb: HTMLButtonElement) {
+		const canvas = orb.querySelector<HTMLCanvasElement>('.spark-orb-canvas');
+		const ctx = canvas?.getContext('2d');
+		if (!canvas || !ctx) return;
+
+		const seed = canvas.dataset.seed ?? 'spark';
+		const colors = (canvas.dataset.colors ?? '')
+			.split(',')
+			.map((c) => c.trim())
+			.filter(Boolean);
+		const palette = colors.length > 0 ? colors : ['#4fb3ac'];
+		const size = canvas.width;
+		const dpr = window.devicePixelRatio || 1;
+		canvas.width = size * dpr;
+		canvas.height = size * dpr;
+		ctx.scale(dpr, dpr);
+
+		const rng = mulberry32(hashSeed(seed));
+		const dropletCount = 7;
+		const droplets: Droplet[] = Array.from({ length: dropletCount }, (_, i) => ({
+			angleOffset: (rng() - 0.5) * 2,
+			angleDrift: (rng() - 0.5) * 0.5,
+			speed: 0.16 + rng() * 0.12,
+			phase: rng(),
+			radius: size * (0.045 + rng() * 0.045),
+			color: palette[i % palette.length],
+		}));
+
+		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const cx = size / 2;
+		const cy = size / 2;
+		const coreRadius = size * 0.13;
+		// At rest the droplets launch into a narrow upward cone (a shallow
+		// flame); hovering/touching widens that cone out to a full circle
+		// so the burst still reads as an omnidirectional spark.
+		const upAngle = -Math.PI / 2;
+		const idleSpread = 0.6;
+		const activeSpread = Math.PI;
+		const idleMaxDist = size * 0.26;
+		const hoverMaxDistBonus = size * 0.22;
+		// The core wanders slowly inside the sphere on a lopsided Lissajous
+		// path rather than sitting pinned dead-center, so the whole flame
+		// base (core + droplet origin) drifts as one unit.
+		const wanderAmpX = size * 0.09;
+		const wanderAmpY = size * 0.07;
+		let energy = 0;
+		let targetEnergy = 0;
+
+		function draw(rawT: number, simTime: number, driftTime: number, pulsePhase: number, e: number) {
+			ctx!.clearRect(0, 0, size, size);
+			ctx!.globalCompositeOperation = 'lighter';
+
+			const wanderX = Math.sin(rawT * 0.8) * wanderAmpX + Math.sin(rawT * 1.7 + 1.3) * wanderAmpX * 0.4;
+			const wanderY = Math.cos(rawT * 0.65) * wanderAmpY + Math.sin(rawT * 1.3 + 2.1) * wanderAmpY * 0.4;
+			const coreX = cx + wanderX;
+			const coreY = cy + wanderY;
+
+			const corePulse = 1 + (0.1 + e * 0.18) * Math.sin(pulsePhase);
+			ctx!.beginPath();
+			ctx!.arc(coreX, coreY, coreRadius * corePulse, 0, Math.PI * 2);
+			ctx!.fillStyle = palette[0];
+			ctx!.fill();
+
+			const maxDist = idleMaxDist + e * hoverMaxDistBonus;
+			const spread = idleSpread + e * (activeSpread - idleSpread);
+			for (const d of droplets) {
+				const cycle = (((simTime * d.speed + d.phase) % 1) + 1) % 1;
+				const eased = cycle * cycle;
+				const dist = maxDist * eased;
+				const angle = upAngle + d.angleOffset * spread + driftTime * d.angleDrift;
+				const x = coreX + Math.cos(angle) * dist;
+				const y = coreY + Math.sin(angle) * dist;
+
+				const fadeIn = Math.min(cycle / 0.12, 1);
+				const fadeOut = 1 - Math.max((cycle - 0.72) / 0.28, 0);
+				const alpha = Math.max(Math.min(fadeIn, fadeOut), 0) * (0.75 + e * 0.22);
+				const dropletRadius = d.radius * (0.7 + 0.3 * (1 - cycle)) * (1 + e * 0.3);
+
+				ctx!.globalAlpha = alpha;
+				ctx!.beginPath();
+				ctx!.arc(x, y, dropletRadius, 0, Math.PI * 2);
+				ctx!.fillStyle = d.color;
+				ctx!.fill();
+			}
+
+			ctx!.globalAlpha = 1;
+			ctx!.globalCompositeOperation = 'source-over';
+		}
+
+		draw(0, 0, 0, 0, 0);
+		if (reduceMotion) return;
+
+		/*
+		 * simTime/driftTime/pulsePhase accumulate incrementally each frame,
+		 * scaled by the *current* speed — rather than multiplying total
+		 * elapsed time by a hover-dependent factor, which would retroactively
+		 * rescale the whole animation history and snap every droplet (or the
+		 * core's pulse) to a new position/phase the instant the multiplier
+		 * changed. That snap grows with how long the page has been open (it's
+		 * elapsed time being rescaled), which is why the core pulse used to
+		 * get more chaotic on hover the longer the orb had been running.
+		 */
+		let raf = 0;
+		let simTime = 0;
+		let driftTime = 0;
+		let pulsePhase = 0;
+		let lastNow: number | null = null;
+		function loop(now: number) {
+			if (lastNow === null) lastNow = now;
+			const dt = Math.min((now - lastNow) / 1000, 0.1);
+			lastNow = now;
+			// Frame-rate independent smoothing (fixed 60fps-tuned factors drift
+			// on devices with variable/low frame rates, which was part of what
+			// made the energy ramp feel erratic on touch).
+			energy += (targetEnergy - energy) * (1 - Math.exp(-3.7 * dt));
+			simTime += dt * (0.75 + energy * 2.3);
+			driftTime += dt * (0.18 + energy * 0.85);
+			pulsePhase += dt * (1.6 + energy * 1.4);
+			draw(now / 1000, simTime, driftTime, pulsePhase, energy);
+			raf = requestAnimationFrame(loop);
+		}
+		raf = requestAnimationFrame(loop);
+
+		const wake = () => (targetEnergy = 1);
+		const rest = () => (targetEnergy = 0);
+		orb.addEventListener('pointerenter', wake);
+		orb.addEventListener('pointerleave', rest);
+		orb.addEventListener('focus', wake);
+		orb.addEventListener('blur', rest);
+	}
+
+	document.querySelectorAll<HTMLButtonElement>('.spark-orb').forEach(setupOrb);
+</script>

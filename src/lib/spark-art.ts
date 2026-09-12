@@ -1,11 +1,11 @@
 /*
  * Geometry for the procedural "spark" motif: a bright core, curved tapering
- * rays, and a few drifting particles.
+ * rays, and a few drifting particles. renderSparkSvg() below emits this
+ * figure as static SVG at build time (no JS shipped) — used for the site
+ * mark (SparkGlyph.astro / SparkMark.astro).
  *
- * Two renderers share this one description of the figure — the animated
- * <canvas> in SparkIllustration.astro, and renderSparkSvg() below, which emits
- * the exact same drawing as static SVG at build time (no JS shipped). Keep
- * paint() in the component and renderSparkSvg() here in step with each other.
+ * hashSeed() and mulberry32() (the seeded RNG) are also reused by
+ * SparkOrb.astro for its own, unrelated liquid-blob animation.
  */
 
 /*

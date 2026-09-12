@@ -714,10 +714,6 @@ main > section > h1 {
 	display: flex;
 	align-items: center;
 	gap: var(--sp-5);
-	background: var(--surface);
-	border: 1px solid var(--border);
-	border-radius: var(--radius-lg);
-	padding: var(--sp-4) var(--sp-5);
 	margin-bottom: var(--sp-6);
 }
 
@@ -725,6 +721,13 @@ main > section > h1 {
 	margin: 0 0 var(--sp-2);
 	color: var(--text-muted);
 	font-size: var(--fs-sm);
+}
+
+.spark-random-hint {
+	margin: 0;
+	font-family: var(--font-display);
+	font-weight: 700;
+	color: var(--text);
 }
 
 .sparks-controls {
@@ -742,8 +745,7 @@ main > section > h1 {
 	gap: var(--sp-2);
 }
 
-.filter-chip,
-.layout-toggle {
+.filter-chip {
 	font-family: var(--font-sans);
 	font-size: var(--fs-sm);
 	font-weight: 600;
@@ -756,8 +758,7 @@ main > section > h1 {
 	transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
 }
 
-.filter-chip:hover,
-.layout-toggle:hover {
+.filter-chip:hover {
 	border-color: var(--theme-color);
 	color: var(--text);
 }
@@ -788,7 +789,6 @@ main > section > h1 {
 
 @media (prefers-reduced-motion: reduce) {
 	.filter-chip,
-	.layout-toggle,
 	.random-spark {
 		transition: none;
 	}
@@ -806,16 +806,6 @@ main > section > h1 {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
 	gap: var(--sp-4);
-}
-
-.spark-grid--row {
-	display: flex;
-	overflow-x: auto;
-	padding-bottom: var(--sp-3);
-}
-
-.spark-grid--row .spark-card {
-	flex: 0 0 170px;
 }
 
 .spark-card {
@@ -882,12 +872,6 @@ main > section > h1 {
 .sparks-empty {
 	color: var(--text-muted);
 	margin-top: var(--sp-6);
-}
-
-.spark-hero {
-	display: flex;
-	justify-content: center;
-	margin-bottom: var(--sp-5);
 }
 
 .spark-header {
