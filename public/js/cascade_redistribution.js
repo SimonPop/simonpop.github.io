@@ -73,9 +73,9 @@
   const lowBtn = styleToggle(controls.append("button").text(REGIMES.low.label));
   const highBtn = styleToggle(controls.append("button").text(REGIMES.high.label));
   const triggerBtn = styleToggle(controls.append("button").text("Fail the hub"))
-    .style("border", "1px solid " + themeColor)
-    .style("background", themeColor)
-    .style("color", "#fff");
+    .style("border", "1px solid " + dangerColor)
+    .style("background", "#fff")
+    .style("color", dangerColor);
 
   function paintToggles(active) {
     [[lowBtn, "low"], [highBtn, "high"]].forEach(([btn, key]) => {
