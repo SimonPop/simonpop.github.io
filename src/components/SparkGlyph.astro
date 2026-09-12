@@ -1,0 +1,34 @@
+---
+/*
+ * Static, build-time rendering of the spark motif. Ships no JavaScript, so it
+ * is what the site mark (SparkMark.astro, in the header) uses.
+ */
+import { renderSparkSvg } from '../lib/spark-art';
+
+interface Props {
+	seed: string;
+	color: string;
+	size?: number;
+	/** Display box, when it should differ from the size the figure is drawn at. */
+	displaySize?: number;
+	rays?: number;
+	colors?: string[];
+	label?: string | null;
+	class?: string;
+}
+
+const { seed, color, size = 220, displaySize, rays, colors, label, class: className } = Astro.props;
+
+const svg = renderSparkSvg({
+	seed,
+	color,
+	size,
+	rays,
+	colors,
+	...(displaySize !== undefined ? { displaySize } : {}),
+	...(label !== undefined ? { label } : {}),
+	...(className ? { class: className } : {}),
+});
+---
+
+<Fragment set:html={svg} />

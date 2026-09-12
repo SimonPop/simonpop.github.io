@@ -1,0 +1,108 @@
+---
+/*
+ * Section list for long articles. Rendered by ArticleLayout only when the
+ * article has enough sections to be worth one — a two-section article gets no
+ * table of contents rather than a decorative stub.
+ *
+ * One markup, two forms: a collapsible block under the article header on narrow
+ * screens, a sticky column in the left margin from 1200px up (see global.css).
+ */
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+	headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+/*
+ * KaTeX renders every formula three times over — MathML, the LaTeX source in an
+ * <annotation>, then the visual HTML — and Astro's heading text is the flat
+ * textContent of all three, so "$\lambda_2$" arrives as "λ2\lambda_2λ2".
+ * Collapse that echo: a LaTeX-looking run flanked by two identical strings.
+ *
+ * This only has to be good enough for the no-JS rendering; the script below
+ * replaces each label with the heading's real markup once the page loads.
+ */
+function stripKatexEcho(text: string): string {
+	return text.replace(/(\S+?)(\\[a-zA-Z]+\S*?)\1/g, '$1');
+}
+---
+
+{/* Closed by default so it stays a single line on a narrow screen; the script
+    below opens it once there is a margin to put it in. */}
+<details class="article-toc">
+	<summary>Contents</summary>
+	<nav aria-label="Table of contents">
+		<ol>
+			{
+				headings.map((heading) => (
+					<li>
+						<a href={`#${heading.slug}`}>{stripKatexEcho(heading.text)}</a>
+					</li>
+				))
+			}
+		</ol>
+	</nav>
+</details>
+
+<script>
+	const toc = document.querySelector<HTMLDetailsElement>('.article-toc');
+	if (toc) {
+		// Above the breakpoint the disclosure is styled away, so make sure a panel
+		// collapsed on a narrow screen reopens if the viewport widens.
+		const wide = window.matchMedia('(min-width: 1200px)');
+		const sync = () => {
+			if (wide.matches) toc.open = true;
+		};
+		wide.addEventListener('change', sync);
+		sync();
+
+		const links = new Map<string, HTMLAnchorElement>();
+		toc.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((link) => {
+			links.set(decodeURIComponent(link.hash.slice(1)), link);
+		});
+
+		const targets = [...links.keys()]
+			.map((id) => document.getElementById(id))
+			.filter((el): el is HTMLElement => el !== null);
+
+		// Take each label from the heading itself, so a heading containing maths
+		// shows the same rendered formula here as it does in the article.
+		targets.forEach((target) => {
+			const link = links.get(target.id);
+			if (!link) return;
+			const clone = target.cloneNode(true) as HTMLElement;
+			clone.querySelector('.heading-anchor')?.remove();
+			link.innerHTML = clone.innerHTML;
+		});
+
+		if (targets.length > 0) {
+			// Start on the first section: at the top of the page no heading has
+			// crossed the observer band yet, and an unmarked list reads as broken.
+			let current: HTMLAnchorElement | null = links.get(targets[0].id) ?? null;
+			current?.setAttribute('aria-current', 'true');
+			const visible = new Set<string>();
+
+			const observer = new IntersectionObserver(
+				(entries) => {
+					for (const entry of entries) {
+						if (entry.isIntersecting) visible.add(entry.target.id);
+						else visible.delete(entry.target.id);
+					}
+					// The first heading still on screen is the section being read; if none
+					// is, keep whichever was highlighted last.
+					const active = targets.find((t) => visible.has(t.id));
+					const link = active ? links.get(active.id) ?? null : current;
+					if (link === current) return;
+					current?.removeAttribute('aria-current');
+					link?.setAttribute('aria-current', 'true');
+					current = link;
+				},
+				{ rootMargin: '-80px 0px -70% 0px' },
+			);
+
+			targets.forEach((target) => observer.observe(target));
+		}
+	}
+</script>

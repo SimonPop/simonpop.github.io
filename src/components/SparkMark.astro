@@ -1,0 +1,32 @@
+---
+/*
+ * The site's mark: the same spark motif as the Sparks format and the favicon,
+ * drawn once from a fixed seed so it never changes between pages.
+ *
+ * Seed, ray count, colours and drawing size live in spark-art.ts, where the
+ * favicon generator reads them too. The figure is always drawn at BRAND_SIZE
+ * and only scaled into the requested box — the motif is not scale-invariant,
+ * so redrawing it larger would quietly produce a different mark.
+ */
+import SparkGlyph from './SparkGlyph.astro';
+import { BRAND_RAYS, BRAND_SEED, BRAND_SIZE, BRAND_WHEEL } from '../lib/spark-art';
+
+interface Props {
+	size?: number;
+	/** Give the mark a name when it is not already inside a labelled link. */
+	label?: string | null;
+}
+
+const { size = BRAND_SIZE, label = null } = Astro.props;
+---
+
+<SparkGlyph
+	seed={BRAND_SEED}
+	color={BRAND_WHEEL[0]}
+	colors={BRAND_WHEEL}
+	rays={BRAND_RAYS}
+	size={BRAND_SIZE}
+	displaySize={size}
+	label={label}
+	class="spark-mark"
+/>
