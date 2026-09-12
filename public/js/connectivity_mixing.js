@@ -4,7 +4,7 @@
   root.style("display", "flex").style("flex-direction", "column").style("align-items", "center").style("gap", "0.6rem");
 
   const themeEl = document.querySelector(".spark, .article");
-  const themeColor = (themeEl && getComputedStyle(themeEl).getPropertyValue("--theme-color").trim()) || "#c23b6b";
+  const themeColor = (themeEl && getComputedStyle(themeEl).getPropertyValue("--theme-color").trim()) || "#4a5fd9";
   const baseColor = (themeEl && getComputedStyle(themeEl).getPropertyValue("--border").trim()) || "#cbd5e1";
   const width = 500, height = 260;
 
