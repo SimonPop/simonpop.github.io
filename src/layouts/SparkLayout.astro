@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import SparkGlyph from '../components/SparkGlyph.astro';
+import { SPARK_PALETTE } from '../lib/spark-art';
 import { THEME_META, type ThemeKey } from '../lib/themes';
 
 interface Props {
@@ -23,10 +24,10 @@ const formattedDate = date.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={`${title} — Simon Popelier`} description={title} themeColor={themeMeta.color}>
+<BaseLayout title={`${title} — Simon Popelier`} description={title}>
 	<article class="spark">
 		<div class="spark-hero">
-			<SparkGlyph seed={slug} color={themeMeta.color} size={220} label={null} />
+			<SparkGlyph seed={slug} color={SPARK_PALETTE[0]} colors={SPARK_PALETTE} size={220} displaySize={120} label={null} />
 		</div>
 		<header class="spark-header">
 			<span class="theme-badge">{themeMeta.label}</span>

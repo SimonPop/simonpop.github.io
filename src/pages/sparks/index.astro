@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import SparkCard from '../../components/SparkCard.astro';
 import SparkIllustration from '../../components/SparkIllustration.astro';
+import { SPARK_PALETTE } from '../../lib/spark-art';
 import { THEME_META } from '../../lib/themes';
 
 const sparks = (await getCollection('sparks', ({ data }) => !data.draft)).sort(
@@ -15,7 +16,6 @@ const themeEntries = (Object.entries(THEME_META) as [keyof typeof THEME_META, (t
 );
 
 const heroSpark = sparks.length > 0 ? sparks[Math.floor(Math.random() * sparks.length)] : undefined;
-const heroColor = heroSpark ? THEME_META[heroSpark.data.theme].color : THEME_META.graph.color;
 const heroSeed = heroSpark ? `hero-${heroSpark.id}` : 'hero-spark';
 ---
 
@@ -24,12 +24,7 @@ const heroSeed = heroSpark ? `hero-${heroSpark.id}` : 'hero-spark';
 	<p class="sparks-intro">Short-form notes. Entry points into the longer articles, or ideas on their own.</p>
 
 	<div class="spark-random-hero">
-		<SparkIllustration
-			seed={heroSeed}
-			color={heroColor}
-			colors={themeEntries.map(([, meta]) => meta.color)}
-			size={88}
-		/>
+		<SparkIllustration seed={heroSeed} color={SPARK_PALETTE[0]} colors={SPARK_PALETTE} size={88} />
 		<div class="spark-random-hero-text">
 			<p class="spark-random-label">Not sure where to start?</p>
 			<button class="random-spark" id="random-spark">Jump to a random spark →</button>
@@ -41,7 +36,7 @@ const heroSeed = heroSpark ? `hero-${heroSpark.id}` : 'hero-spark';
 			<button class="filter-chip" data-theme-filter="all" aria-pressed="true">All</button>
 			{
 				themeEntries.map(([key, meta]) => (
-					<button class="filter-chip" data-theme-filter={key} aria-pressed="false" style={`--theme-color: ${meta.color}`}>
+					<button class="filter-chip" data-theme-filter={key} aria-pressed="false">
 						{meta.label}
 					</button>
 				))

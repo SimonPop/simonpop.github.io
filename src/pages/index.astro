@@ -28,7 +28,7 @@ const intro = '';
 				articles.map((article) => {
 					const theme = THEME_META[article.data.theme];
 					return (
-						<li style={`--theme-color: ${theme.color}`}>
+						<li>
 							<span class="theme-badge">{theme.label}</span>
 							<a href={`/articles/${article.id}/`}>{article.data.title}</a>
 							<p class="summary">{article.data.summary}</p>

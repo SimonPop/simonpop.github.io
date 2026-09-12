@@ -14,7 +14,13 @@
 	--border: #e5e1d8;
 	--text: #1b1a17;
 	--text-muted: #6b665d;
-	--link: #3f52c9;
+
+	/* The site's one splash of colour — a blue-green that echoes the spark
+	   motif — reserved for occasional accents (a button, a hover, the
+	   reading progress hairline) rather than for painting whole surfaces.
+	   Everything else in the palette above is black, white and grey. */
+	--accent: #0d7377;
+	--link: var(--accent);
 
 	/* Fallback stack, used behind every webfont below. */
 	--font-fallback: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
@@ -52,7 +58,11 @@
 	--radius: 10px;
 	--radius-lg: 16px;
 
-	--theme-color: var(--link);
+	/* Kept as its own name (rather than inlining var(--accent) at each call
+	   site) because it used to vary per article theme. It no longer does —
+	   every page now shares the one accent — but the name still reads well
+	   wherever it's used: "this element picks up the page's accent colour". */
+	--theme-color: var(--accent);
 }
 
 * {
@@ -199,8 +209,8 @@ main {
 
 /* ==========================================================================
    Theme badge
-   A tinted chip rather than a saturated sticker: the colour still identifies
-   the theme, without out-shouting the title next to it.
+   A plain grey chip, not a colour-coded one: themes are a label to filter by,
+   not a hue to memorise. The accent is saved for moments that matter more.
    ========================================================================== */
 
 .theme-badge {
@@ -209,13 +219,18 @@ main {
 	font-size: var(--fs-xs);
 	font-weight: 600;
 	line-height: 1.4;
-	/* Nudged toward the ink: the raw theme colour on its own 12% tint sits at
-	   3.8-4.4:1, under AA for text this small. This clears 4.7:1 for all five. */
-	color: color-mix(in srgb, var(--theme-color) 85%, var(--text));
-	background: color-mix(in srgb, var(--theme-color) 12%, var(--bg));
-	border: 1px solid color-mix(in srgb, var(--theme-color) 22%, transparent);
+	color: var(--text-muted);
+	background: var(--surface);
+	border: 1px solid var(--border);
 	padding: 0.1rem 0.55rem;
 	border-radius: 999px;
+	transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.theme-badge {
+		transition: none;
+	}
 }
 
 /* ==========================================================================
@@ -261,9 +276,8 @@ main > section > h1 {
 
 /* ==========================================================================
    Article list
-   Flat rows separated by a hairline, with a faint theme-coloured rule down the
-   left that lights up on hover. Quieter than boxed cards, and it leaves the
-   Sparks grid to be the page's one moment of colour.
+   Flat rows separated by a hairline, with a faint accent-coloured rule down
+   the left that lights up on hover. Quieter than boxed cards.
    ========================================================================== */
 
 .article-list {
@@ -322,6 +336,12 @@ main > section > h1 {
 
 .article-list li:hover a {
 	color: var(--theme-color);
+}
+
+.article-list li:hover .theme-badge {
+	color: color-mix(in srgb, var(--theme-color) 85%, var(--text));
+	background: color-mix(in srgb, var(--theme-color) 12%, var(--bg));
+	border-color: color-mix(in srgb, var(--theme-color) 35%, transparent);
 }
 
 .article-list .summary {
@@ -453,8 +473,19 @@ main > section > h1 {
 	opacity: 0.6;
 }
 
+/* Neutral ink rather than the accent: prose links are frequent enough that
+   colouring all of them would turn the accent into a fill, not a note. The
+   underline still marks them as links; the accent shows up on hover. */
 .article-body a {
+	color: var(--text);
+	text-decoration: underline;
+	text-decoration-color: var(--border);
+	text-underline-offset: 0.15em;
+}
+
+.article-body a:hover {
 	color: var(--theme-color);
+	text-decoration-color: currentColor;
 }
 
 .article-body ul,
@@ -822,6 +853,12 @@ main > section > h1 {
 
 .spark-card:hover .spark-card-title {
 	color: var(--theme-color);
+}
+
+.spark-card:hover .theme-badge {
+	color: color-mix(in srgb, var(--theme-color) 85%, var(--text));
+	background: color-mix(in srgb, var(--theme-color) 12%, var(--bg));
+	border-color: color-mix(in srgb, var(--theme-color) 35%, transparent);
 }
 
 /* Cards in a row stretch to the tallest title, so pin the date to the bottom

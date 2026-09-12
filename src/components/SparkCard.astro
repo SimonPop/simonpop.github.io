@@ -1,0 +1,21 @@
+---
+import { THEME_META, type ThemeKey } from '../lib/themes';
+
+interface Props {
+	slug: string;
+	title: string;
+	date: Date;
+	theme: ThemeKey;
+}
+
+const { slug, title, date, theme } = Astro.props;
+const themeMeta = THEME_META[theme];
+---
+
+<a class="spark-card" href={`/sparks/${slug}/`} data-theme={theme}>
+	<span class="theme-badge">{themeMeta.label}</span>
+	<span class="spark-card-title">{title}</span>
+	<time datetime={date.toISOString()}>
+		{date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+	</time>
+</a>

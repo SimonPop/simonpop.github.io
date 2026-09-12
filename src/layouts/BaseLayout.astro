@@ -13,8 +13,6 @@ import SparkMark from '../components/SparkMark.astro';
 interface Props {
 	title: string;
 	description?: string;
-	/** Theme colour for the page, inherited by everything through --theme-color. */
-	themeColor?: string;
 	/** Reading progress hairline under the header — long-form pages only. */
 	progress?: boolean;
 	/** Extra class on <main>, used by article pages to widen for the sidebar. */
@@ -24,7 +22,6 @@ interface Props {
 const {
 	title,
 	description = 'Data Scientist and Graph Enthusiast.',
-	themeColor,
 	progress = false,
 	mainClass,
 } = Astro.props;
@@ -43,7 +40,7 @@ const {
 		<link rel="icon" href="/favicon.ico" sizes="32x32" />
 		<title>{title}</title>
 	</head>
-	<body style={themeColor ? `--theme-color: ${themeColor}` : undefined}>
+	<body>
 		<header class="site-header">
 			<nav class="container">
 				<a class="brand" href="/">
