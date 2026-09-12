@@ -1,0 +1,29 @@
+---
+import { getCollection, render } from 'astro:content';
+import SparkLayout from '../../layouts/SparkLayout.astro';
+
+export async function getStaticPaths() {
+	const sparks = await getCollection('sparks', ({ data }) => !data.draft);
+	const allSlugs = sparks.map((s) => s.id);
+	return sparks.map((spark) => ({
+		params: { slug: spark.id },
+		props: { spark, otherSlugs: allSlugs.filter((id) => id !== spark.id) },
+	}));
+}
+
+const { spark, otherSlugs } = Astro.props;
+const { Content } = await render(spark);
+---
+
+<SparkLayout
+	slug={spark.id}
+	title={spark.data.title}
+	date={spark.data.date}
+	theme={spark.data.theme}
+	tags={spark.data.tags}
+	article={spark.data.article}
+	otherSlugs={otherSlugs}
+	js={spark.data.js}
+>
+	<Content />
+</SparkLayout>

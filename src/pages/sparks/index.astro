@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import SparkCard from '../../components/SparkCard.astro';
+import SparkIllustration from '../../components/SparkIllustration.astro';
+import { THEME_META } from '../../lib/themes';
+
+const sparks = (await getCollection('sparks', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const themesInUse = new Set(sparks.map((spark) => spark.data.theme));
+const themeEntries = (Object.entries(THEME_META) as [keyof typeof THEME_META, (typeof THEME_META)[keyof typeof THEME_META]][]).filter(
+	([key]) => themesInUse.has(key),
+);
+
+const heroSpark = sparks.length > 0 ? sparks[Math.floor(Math.random() * sparks.length)] : undefined;
+const heroColor = heroSpark ? THEME_META[heroSpark.data.theme].color : THEME_META.graph.color;
+const heroSeed = heroSpark ? `hero-${heroSpark.id}` : 'hero-spark';
+---
+
+<BaseLayout title="Sparks — Simon Popelier" description="Short-form notes and ideas.">
+	<h1>Sparks</h1>
+	<p class="sparks-intro">Short-form notes. Entry points into the longer articles, or ideas on their own.</p>
+
+	<div class="spark-random-hero">
+		<SparkIllustration
+			seed={heroSeed}
+			color={heroColor}
+			colors={themeEntries.map(([, meta]) => meta.color)}
+			size={88}
+		/>
+		<div class="spark-random-hero-text">
+			<p class="spark-random-label">Not sure where to start?</p>
+			<button class="random-spark" id="random-spark">Jump to a random spark →</button>
+		</div>
+	</div>
+
+	<div class="sparks-controls">
+		<div class="theme-filters" role="group" aria-label="Filter by theme">
+			<button class="filter-chip" data-theme-filter="all" aria-pressed="true">All</button>
+			{
+				themeEntries.map(([key, meta]) => (
+					<button class="filter-chip" data-theme-filter={key} aria-pressed="false" style={`--theme-color: ${meta.color}`}>
+						{meta.label}
+					</button>
+				))
+			}
+		</div>
+		<button class="layout-toggle" id="layout-toggle" aria-pressed="false">Row layout</button>
+	</div>
+
+	<div class="spark-grid" id="spark-grid">
+		{
+			sparks.map((spark) => (
+				<SparkCard slug={spark.id} title={spark.data.title} date={spark.data.date} theme={spark.data.theme} />
+			))
+		}
+	</div>
+	{sparks.length === 0 && <p class="sparks-empty">No sparks published yet.</p>}
+</BaseLayout>
+
+<script>
+	const grid = document.getElementById('spark-grid');
+	const chips = document.querySelectorAll<HTMLButtonElement>('.filter-chip');
+	const layoutToggle = document.getElementById('layout-toggle');
+	const randomBtn = document.getElementById('random-spark');
+
+	chips.forEach((chip) => {
+		chip.addEventListener('click', () => {
+			const theme = chip.dataset.themeFilter;
+			chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+			document.querySelectorAll<HTMLAnchorElement>('.spark-card').forEach((card) => {
+				const match = theme === 'all' || card.dataset.theme === theme;
+				card.style.display = match ? '' : 'none';
+			});
+		});
+	});
+
+	layoutToggle?.addEventListener('click', () => {
+		const isRow = grid?.classList.toggle('spark-grid--row');
+		layoutToggle.setAttribute('aria-pressed', String(!!isRow));
+		layoutToggle.textContent = isRow ? 'Grid layout' : 'Row layout';
+	});
+
+	randomBtn?.addEventListener('click', () => {
+		const visible = Array.from(document.querySelectorAll<HTMLAnchorElement>('.spark-card')).filter(
+			(card) => card.style.display !== 'none',
+		);
+		if (visible.length === 0) return;
+		const pick = visible[Math.floor(Math.random() * visible.length)];
+		window.location.href = pick.href;
+	});
+</script>

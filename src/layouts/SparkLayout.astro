@@ -1,0 +1,69 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import SparkGlyph from '../components/SparkGlyph.astro';
+import { THEME_META, type ThemeKey } from '../lib/themes';
+
+interface Props {
+	slug: string;
+	title: string;
+	date: Date;
+	theme: ThemeKey;
+	tags?: string[];
+	article?: string;
+	otherSlugs?: string[];
+	js?: string[];
+}
+
+const { slug, title, date, theme, tags = [], article, otherSlugs = [], js = [] } = Astro.props;
+const themeMeta = THEME_META[theme];
+const formattedDate = date.toLocaleDateString('en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+---
+
+<BaseLayout title={`${title} — Simon Popelier`} description={title} themeColor={themeMeta.color}>
+	<article class="spark">
+		<div class="spark-hero">
+			<SparkGlyph seed={slug} color={themeMeta.color} size={220} label={null} />
+		</div>
+		<header class="spark-header">
+			<span class="theme-badge">{themeMeta.label}</span>
+			<h1>{title}</h1>
+			<p class="article-meta">
+				<time datetime={date.toISOString()}>{formattedDate}</time>
+				{tags.length > 0 && <span> · {tags.join(', ')}</span>}
+			</p>
+		</header>
+		<div class="article-body spark-body">
+			<slot />
+		</div>
+		{
+			article && (
+				<a class="spark-article-link" href={`/articles/${article}/`}>
+					Read the full article →
+				</a>
+			)
+		}
+		{
+			otherSlugs.length > 0 && (
+				<button class="random-spark spark-next" id="random-spark" data-other-slugs={JSON.stringify(otherSlugs)}>
+					Next random spark →
+				</button>
+			)
+		}
+	</article>
+	{js.length > 0 && <script src="https://cdn.jsdelivr.net/npm/d3@7" is:inline></script>}
+	{js.map((file) => <script src={`/js/${file}`} is:inline></script>)}
+</BaseLayout>
+
+<script>
+	const btn = document.getElementById('random-spark');
+	btn?.addEventListener('click', () => {
+		const slugs = JSON.parse(btn.dataset.otherSlugs ?? '[]') as string[];
+		if (slugs.length === 0) return;
+		const pick = slugs[Math.floor(Math.random() * slugs.length)];
+		window.location.href = `/sparks/${pick}/`;
+	});
+</script>
