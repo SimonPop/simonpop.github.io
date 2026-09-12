@@ -1,0 +1,877 @@
+/* ==========================================================================
+   Design tokens
+   Every token is named by role, not by value, and they all live in this one
+   :root block — so a future dark theme only has to redefine the same names
+   under :root[data-theme='dark'] rather than hunt through the stylesheet.
+   ========================================================================== */
+
+:root {
+	color-scheme: light;
+
+	/* Warm paper rather than pure white: the same ink at lower glare. */
+	--bg: #fcfbf8;
+	--surface: #f4f2ec;
+	--border: #e5e1d8;
+	--text: #1b1a17;
+	--text-muted: #6b665d;
+	--link: #3f52c9;
+
+	/* Fallback stack, used behind every webfont below. */
+	--font-fallback: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+	/* One sans for everything — chrome and prose alike. The D3 visualizations in
+	   public/js read these same variables, so they follow along automatically. */
+	--font-sans: 'Open Sans', var(--font-fallback);
+	--font-display: 'Archivo', var(--font-fallback);
+	--font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+	/* Type scale, ~1.2 ratio, fluid on the two largest steps. */
+	--fs-xs: 0.8125rem;
+	--fs-sm: 0.9375rem;
+	--fs-base: 1rem;
+	--fs-body: 1.125rem;
+	--fs-h3: 1.3125rem;
+	--fs-h2: clamp(1.5rem, 1.25rem + 1vw, 1.75rem);
+	--fs-h1: clamp(1.875rem, 1.4rem + 2.2vw, 2.4rem);
+
+	/* Vertical rhythm. */
+	--sp-1: 0.25rem;
+	--sp-2: 0.5rem;
+	--sp-3: 0.75rem;
+	--sp-4: 1rem;
+	--sp-5: 1.5rem;
+	--sp-6: 2rem;
+	--sp-7: 3rem;
+	--sp-8: 4rem;
+
+	/* Widths: prose is capped at a comfortable measure, figures get to breathe
+	   past it, and the page shell is wider still. */
+	--measure: 66ch;
+	--width-figure: 50rem;
+	--width-page: 54rem;
+
+	--radius: 10px;
+	--radius-lg: 16px;
+
+	--theme-color: var(--link);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	font-family: var(--font-sans);
+	font-size: var(--fs-base);
+	color: var(--text);
+	background: var(--bg);
+	line-height: 1.6;
+	-webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: var(--font-display);
+	font-weight: 700;
+	letter-spacing: -0.015em;
+	line-height: 1.2;
+	text-wrap: balance;
+}
+
+a {
+	color: var(--link);
+}
+
+.container {
+	max-width: var(--width-page);
+	margin: 0 auto;
+	padding-left: var(--sp-5);
+	padding-right: var(--sp-5);
+}
+
+main {
+	padding: var(--sp-7) 0 var(--sp-8);
+	min-height: 60vh;
+}
+
+/* ==========================================================================
+   Header & footer
+   ========================================================================== */
+
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 10;
+	background: color-mix(in srgb, var(--bg) 88%, transparent);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+}
+
+.site-header nav {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	row-gap: var(--sp-2);
+	padding-top: var(--sp-4);
+	padding-bottom: var(--sp-4);
+	border-bottom: 1px solid var(--border);
+}
+
+.site-header .links {
+	display: flex;
+	flex-wrap: wrap;
+	row-gap: var(--sp-2);
+}
+
+.site-header .brand {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--sp-2);
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: 1.0625rem;
+	letter-spacing: -0.015em;
+	text-decoration: none;
+	color: var(--text);
+}
+
+.site-header .brand .spark-mark {
+	flex: none;
+}
+
+.site-header .links a,
+.site-footer .links a {
+	margin-left: var(--sp-5);
+	text-decoration: none;
+	color: var(--text-muted);
+	font-size: var(--fs-sm);
+}
+
+.site-footer .links a:first-child {
+	margin-left: 0;
+}
+
+.site-header .links a:hover,
+.site-footer .links a:hover {
+	color: var(--link);
+}
+
+/* Reading progress: a hairline sitting on the header's bottom border. */
+.reading-progress {
+	position: absolute;
+	left: 0;
+	bottom: -1px;
+	height: 2px;
+	width: 0;
+	background: var(--theme-color);
+	transition: width 0.08s linear;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reading-progress {
+		transition: none;
+	}
+}
+
+.site-footer {
+	border-top: 1px solid var(--border);
+	padding: var(--sp-5) 0;
+	color: var(--text-muted);
+	font-size: var(--fs-sm);
+}
+
+.site-footer-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: var(--sp-2);
+}
+
+.site-footer-row p {
+	margin: 0;
+}
+
+/* ==========================================================================
+   Theme badge
+   A tinted chip rather than a saturated sticker: the colour still identifies
+   the theme, without out-shouting the title next to it.
+   ========================================================================== */
+
+.theme-badge {
+	display: inline-block;
+	font-family: var(--font-sans);
+	font-size: var(--fs-xs);
+	font-weight: 600;
+	line-height: 1.4;
+	/* Nudged toward the ink: the raw theme colour on its own 12% tint sits at
+	   3.8-4.4:1, under AA for text this small. This clears 4.7:1 for all five. */
+	color: color-mix(in srgb, var(--theme-color) 85%, var(--text));
+	background: color-mix(in srgb, var(--theme-color) 12%, var(--bg));
+	border: 1px solid color-mix(in srgb, var(--theme-color) 22%, transparent);
+	padding: 0.1rem 0.55rem;
+	border-radius: 999px;
+}
+
+/* ==========================================================================
+   Home
+   ========================================================================== */
+
+/* Listing-page title (Articles, Sparks): sized from the scale rather than left
+   to the browser's default 2em. */
+main > h1,
+main > section > h1 {
+	font-size: var(--fs-h1);
+	margin: 0 0 var(--sp-5);
+}
+
+.section-head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: var(--sp-4);
+	margin-bottom: var(--sp-4);
+}
+
+.section-head h2 {
+	font-size: var(--fs-h2);
+	margin: 0;
+}
+
+.section-link {
+	font-size: var(--fs-sm);
+	font-weight: 600;
+	color: var(--text-muted);
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.section-link:hover {
+	color: var(--link);
+}
+
+.home-sparks {
+	margin-top: var(--sp-8);
+}
+
+/* ==========================================================================
+   Article list
+   Flat rows separated by a hairline, with a faint theme-coloured rule down the
+   left that lights up on hover. Quieter than boxed cards, and it leaves the
+   Sparks grid to be the page's one moment of colour.
+   ========================================================================== */
+
+.article-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.article-list li {
+	position: relative;
+	padding: var(--sp-5) 0 var(--sp-5) var(--sp-5);
+	border-top: 1px solid var(--border);
+}
+
+.article-list li:last-child {
+	border-bottom: 1px solid var(--border);
+}
+
+.article-list li::before {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: var(--sp-5);
+	bottom: var(--sp-5);
+	width: 2px;
+	border-radius: 2px;
+	background: var(--theme-color);
+	opacity: 0.28;
+	transition: opacity 0.15s ease;
+}
+
+.article-list li:hover::before {
+	opacity: 1;
+}
+
+.article-list .theme-badge {
+	margin-bottom: var(--sp-2);
+}
+
+.article-list a {
+	display: block;
+	font-family: var(--font-display);
+	text-decoration: none;
+	color: var(--text);
+	font-size: 1.25rem;
+	font-weight: 700;
+	letter-spacing: -0.015em;
+	line-height: 1.3;
+}
+
+.article-list a::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+}
+
+.article-list li:hover a {
+	color: var(--theme-color);
+}
+
+.article-list .summary {
+	color: var(--text-muted);
+	margin: var(--sp-2) 0 0;
+	max-width: 62ch;
+}
+
+.article-list .meta {
+	display: block;
+	color: var(--text-muted);
+	font-size: var(--fs-xs);
+	margin-top: var(--sp-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.article-list li::before {
+		transition: none;
+	}
+}
+
+/* ==========================================================================
+   Article
+   ========================================================================== */
+
+.article-header {
+	max-width: var(--measure);
+	margin-bottom: var(--sp-7);
+}
+
+.article-header h1 {
+	font-size: var(--fs-h1);
+	margin: var(--sp-3) 0 var(--sp-2);
+}
+
+.article-meta {
+	color: var(--text-muted);
+	font-size: var(--fs-sm);
+	margin: 0;
+}
+
+/*
+ * The body is a grid with named gutters: text stays inside `--measure`, while
+ * figures and visualization containers are allowed to spill into the margins.
+ * Nothing in the Markdown has to change — <figure>, bare <img> and the D3
+ * <div id="…"> containers are already direct children of .article-body.
+ */
+.article-body {
+	display: grid;
+	grid-template-columns:
+		[full-start] minmax(0, 1fr)
+		[text-start] min(var(--measure), 100%) [text-end]
+		minmax(0, 1fr) [full-end];
+	font-size: var(--fs-body);
+	line-height: 1.75;
+	overflow-wrap: break-word;
+}
+
+.article-body > * {
+	grid-column: text;
+	min-width: 0;
+}
+
+.article-body > figure,
+.article-body > div[id],
+.article-body > img {
+	grid-column: full;
+	justify-self: center;
+	width: 100%;
+	max-width: min(100%, var(--width-figure));
+}
+
+.article-body > :first-child {
+	margin-top: 0;
+}
+
+/* A flat 1em default at this line-height leaves paragraphs drifting apart;
+   a fixed rhythm keeps them reading as one column of text. */
+.article-body p {
+	margin: 0 0 var(--sp-5);
+}
+
+.article-body h2,
+.article-body h3,
+.article-body h4,
+.article-body h5,
+.article-body h6 {
+	margin-top: var(--sp-7);
+	margin-bottom: var(--sp-3);
+}
+
+.article-body h2 {
+	font-size: var(--fs-h2);
+}
+
+.article-body h3 {
+	font-size: var(--fs-h3);
+}
+
+.article-body h4,
+.article-body h5,
+.article-body h6 {
+	font-size: var(--fs-base);
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--text-muted);
+}
+
+/* Heading anchors: a "#" that only appears on hover, hung in the left margin
+   so it never shifts the heading it belongs to. */
+.article-body :is(h2, h3, h4, h5, h6) {
+	position: relative;
+}
+
+.heading-anchor {
+	position: absolute;
+	right: 100%;
+	padding-right: 0.35em;
+	font-family: var(--font-mono);
+	font-weight: 400;
+	color: var(--theme-color);
+	text-decoration: none;
+	opacity: 0;
+	transition: opacity 0.15s ease;
+}
+
+:is(h2, h3, h4, h5, h6):hover > .heading-anchor,
+.heading-anchor:focus-visible {
+	opacity: 0.6;
+}
+
+.article-body a {
+	color: var(--theme-color);
+}
+
+.article-body ul,
+.article-body ol {
+	padding-left: 1.4rem;
+}
+
+.article-body li + li {
+	margin-top: var(--sp-1);
+}
+
+.article-body blockquote {
+	margin: var(--sp-5) 0;
+	padding-left: var(--sp-4);
+	border-left: 3px solid color-mix(in srgb, var(--theme-color) 40%, transparent);
+	color: var(--text-muted);
+}
+
+/* Figures: the <figure> is the styled unit — a hairline frame, no fill, so a
+   page with a dozen visualizations doesn't turn into a stack of grey slabs. */
+.article-body figure,
+.article-body > div[id] {
+	margin: var(--sp-7) auto;
+	padding: var(--sp-4);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background: transparent;
+}
+
+/* Visualization containers. Column, not row: several widgets append a control
+   strip and then the chart as siblings, and a row would sit them side by side.
+   A lone <svg> child still ends up centred. */
+.article-body figure > div[id],
+.article-body > div[id] {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	overflow-x: auto;
+}
+
+.article-body figure > div[id] {
+	padding: 0;
+	border: 0;
+	margin: 0;
+}
+
+.article-body figure > img {
+	display: block;
+	margin: 0 auto;
+}
+
+.article-body figcaption {
+	margin-top: var(--sp-3);
+	color: var(--text-muted);
+	font-size: var(--fs-xs);
+	line-height: 1.5;
+	text-align: center;
+}
+
+.article-body img,
+.article-body svg {
+	max-width: 100%;
+	height: auto;
+}
+
+.article-body code {
+	font-family: var(--font-mono);
+	font-size: 0.875em;
+	background: var(--surface);
+	padding: 0.1rem 0.35rem;
+	border-radius: 4px;
+}
+
+.article-body pre {
+	font-family: var(--font-mono);
+	font-size: var(--fs-sm);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	padding: var(--sp-4);
+	overflow-x: auto;
+	border-radius: var(--radius);
+}
+
+.article-body pre code {
+	background: none;
+	padding: 0;
+}
+
+.article-body table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: var(--fs-sm);
+}
+
+.article-body th,
+.article-body td {
+	border-bottom: 1px solid var(--border);
+	padding: var(--sp-2) var(--sp-3);
+	text-align: left;
+}
+
+.article-body th {
+	font-family: var(--font-display);
+	font-weight: 600;
+}
+
+.katex-display {
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding: 0.2rem 0;
+}
+
+/* ==========================================================================
+   Table of contents
+   Only rendered for articles with enough sections to warrant one. Below the
+   breakpoint it is a collapsible block under the article header; above it, a
+   sticky column in the page's left margin.
+   ========================================================================== */
+
+.article-toc {
+	margin-bottom: var(--sp-6);
+	font-size: var(--fs-sm);
+}
+
+.article-toc summary {
+	font-family: var(--font-display);
+	font-weight: 600;
+	cursor: pointer;
+	color: var(--text-muted);
+}
+
+.article-toc ol {
+	list-style: none;
+	margin: var(--sp-3) 0 0;
+	padding: 0;
+	border-left: 1px solid var(--border);
+}
+
+.article-toc li {
+	margin: 0;
+}
+
+.article-toc a {
+	display: block;
+	padding: 0.3rem 0 0.3rem var(--sp-3);
+	margin-left: -1px;
+	border-left: 2px solid transparent;
+	color: var(--text-muted);
+	text-decoration: none;
+	line-height: 1.4;
+}
+
+.article-toc a:hover {
+	color: var(--text);
+}
+
+.article-toc a[aria-current='true'] {
+	color: var(--theme-color);
+	border-left-color: var(--theme-color);
+	font-weight: 600;
+}
+
+@media (min-width: 1200px) {
+	/* Widen the shell just enough to hang the sidebar off the article's left. */
+	main.has-toc {
+		max-width: calc(var(--width-page) + 12rem + var(--sp-7));
+	}
+
+	.article-shell {
+		display: grid;
+		grid-template-columns: 12rem minmax(0, var(--width-page));
+		column-gap: var(--sp-7);
+		justify-content: center;
+	}
+
+	/* The contents span both rows so it can stick beside the whole article,
+	   while header and body stay stacked in the right-hand column. */
+	.article-shell > .article-toc {
+		grid-column: 1;
+		grid-row: 1 / span 2;
+		position: sticky;
+		top: 5.5rem;
+		align-self: start;
+		max-height: calc(100vh - 8rem);
+		overflow-y: auto;
+		margin-bottom: 0;
+	}
+
+	.article-shell > .article-header {
+		grid-column: 2;
+		grid-row: 1;
+	}
+
+	.article-shell > .article-body {
+		grid-column: 2;
+		grid-row: 2;
+	}
+
+	/* Reads as a label in the margin; still clickable, so a no-JS visitor can
+	   collapse or expand it. */
+	.article-shell > .article-toc summary {
+		list-style: none;
+		font-size: var(--fs-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+	}
+
+	.article-shell > .article-toc summary::-webkit-details-marker {
+		display: none;
+	}
+}
+
+/* ==========================================================================
+   Sparks
+   ========================================================================== */
+
+.sparks-intro,
+.page-intro {
+	color: var(--text-muted);
+	max-width: 60ch;
+	margin: 0 0 var(--sp-6);
+	font-size: var(--fs-body);
+}
+
+.spark-random-hero {
+	display: flex;
+	align-items: center;
+	gap: var(--sp-5);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	padding: var(--sp-4) var(--sp-5);
+	margin-bottom: var(--sp-6);
+}
+
+.spark-random-label {
+	margin: 0 0 var(--sp-2);
+	color: var(--text-muted);
+	font-size: var(--fs-sm);
+}
+
+.sparks-controls {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: var(--sp-4);
+	margin-bottom: var(--sp-6);
+}
+
+.theme-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--sp-2);
+}
+
+.filter-chip,
+.layout-toggle {
+	font-family: var(--font-sans);
+	font-size: var(--fs-sm);
+	font-weight: 600;
+	color: var(--text-muted);
+	background: var(--bg);
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	padding: 0.3rem 0.85rem;
+	cursor: pointer;
+	transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.filter-chip:hover,
+.layout-toggle:hover {
+	border-color: var(--theme-color);
+	color: var(--text);
+}
+
+.filter-chip[aria-pressed='true'] {
+	color: color-mix(in srgb, var(--theme-color) 85%, var(--text));
+	background: color-mix(in srgb, var(--theme-color) 12%, var(--bg));
+	border-color: color-mix(in srgb, var(--theme-color) 35%, transparent);
+}
+
+.random-spark {
+	font-family: var(--font-display);
+	font-size: var(--fs-sm);
+	font-weight: 700;
+	color: #fff;
+	background: var(--theme-color);
+	border: none;
+	border-radius: 999px;
+	padding: 0.55rem 1.15rem;
+	cursor: pointer;
+	transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.random-spark:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 16px -6px color-mix(in srgb, var(--theme-color) 60%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.filter-chip,
+	.layout-toggle,
+	.random-spark {
+		transition: none;
+	}
+	.random-spark:hover {
+		transform: none;
+	}
+}
+
+.spark-next {
+	display: block;
+	margin: var(--sp-7) auto 0;
+}
+
+.spark-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+	gap: var(--sp-4);
+}
+
+.spark-grid--row {
+	display: flex;
+	overflow-x: auto;
+	padding-bottom: var(--sp-3);
+}
+
+.spark-grid--row .spark-card {
+	flex: 0 0 170px;
+}
+
+.spark-card {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--sp-2);
+	text-align: center;
+	text-decoration: none;
+	color: var(--text);
+	background: var(--bg);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	padding: var(--sp-4) var(--sp-3);
+	transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.spark-card:hover {
+	border-color: color-mix(in srgb, var(--theme-color) 45%, var(--border));
+	box-shadow: 0 6px 20px -12px color-mix(in srgb, var(--theme-color) 70%, transparent);
+	transform: translateY(-2px);
+}
+
+/* A span rather than a heading: the same card is used under an <h2> on the home
+   page and as the page's own list items on /sparks/, so a fixed level would be
+   wrong in one of the two. */
+.spark-card-title {
+	font-family: var(--font-display);
+	font-size: var(--fs-sm);
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	line-height: 1.35;
+	text-wrap: balance;
+}
+
+.spark-card:hover .spark-card-title {
+	color: var(--theme-color);
+}
+
+/* Cards in a row stretch to the tallest title, so pin the date to the bottom
+   and the whole row lines up. */
+.spark-card time {
+	margin-top: auto;
+	padding-top: var(--sp-1);
+	font-size: var(--fs-xs);
+	color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.spark-card {
+		transition: none;
+	}
+	.spark-card:hover {
+		transform: none;
+	}
+}
+
+.sparks-empty {
+	color: var(--text-muted);
+	margin-top: var(--sp-6);
+}
+
+.spark-hero {
+	display: flex;
+	justify-content: center;
+	margin-bottom: var(--sp-5);
+}
+
+.spark-header {
+	text-align: center;
+	margin-bottom: var(--sp-6);
+}
+
+.spark-header h1 {
+	font-size: var(--fs-h2);
+	margin: var(--sp-3) 0 var(--sp-2);
+}
+
+.spark-article-link {
+	display: inline-block;
+	margin-top: var(--sp-6);
+	font-family: var(--font-display);
+	font-weight: 600;
+	color: var(--theme-color);
+	text-decoration: none;
+}
+
+.spark-article-link:hover {
+	text-decoration: underline;
+}

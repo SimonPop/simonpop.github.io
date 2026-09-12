@@ -1,0 +1,77 @@
+---
+import type { MarkdownHeading } from 'astro';
+import BaseLayout from './BaseLayout.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import { THEME_META, type ThemeKey } from '../lib/themes';
+
+interface Props {
+	title: string;
+	date: Date;
+	theme: ThemeKey;
+	tags: string[];
+	summary: string;
+	js?: string[];
+	headings?: MarkdownHeading[];
+	words?: number;
+}
+
+const { title, date, theme, tags, summary, js = [], headings = [], words } = Astro.props;
+const themeMeta = THEME_META[theme];
+const formattedDate = date.toLocaleDateString('en-US', {
+	year: 'numeric',
+	month: 'long',
+	day: 'numeric',
+});
+
+// Top-level sections only. Below four of them a table of contents is more
+// furniture than help, so short articles get none.
+const sections = headings.filter((heading) => heading.depth === 2);
+const showToc = sections.length >= 4;
+
+const readingMinutes = words ? Math.max(1, Math.round(words / 220)) : null;
+---
+
+<BaseLayout
+	title={`${title} — Simon Popelier`}
+	description={summary}
+	themeColor={themeMeta.color}
+	progress={true}
+	mainClass={showToc ? 'has-toc' : undefined}
+>
+	{/*
+	  Source order is header → contents → body, which is what a narrow screen
+	  should show. From 1200px up the grid in global.css lifts the contents into
+	  the left margin without moving it in the DOM.
+	*/}
+	<article class="article-shell">
+		<header class="article-header">
+			<span class="theme-badge">{themeMeta.label}</span>
+			<h1>{title}</h1>
+			<p class="article-meta">
+				<time datetime={date.toISOString()}>{formattedDate}</time>
+				{readingMinutes && <span> · {readingMinutes} min read</span>}
+				{tags.length > 0 && <span> · {tags.join(', ')}</span>}
+			</p>
+		</header>
+		{showToc && <TableOfContents headings={sections} />}
+		<div class="article-body">
+			<slot />
+		</div>
+	</article>
+	{js.length > 0 && <script src="https://cdn.jsdelivr.net/npm/d3@7" is:inline></script>}
+	{js.map((file) => <script src={`/js/${file}`} is:inline></script>)}
+</BaseLayout>
+
+<script>
+	// Hover anchors on every heading Astro gave an id to.
+	document
+		.querySelectorAll<HTMLHeadingElement>('.article-body :is(h2, h3, h4, h5, h6)[id]')
+		.forEach((heading) => {
+			const anchor = document.createElement('a');
+			anchor.className = 'heading-anchor';
+			anchor.href = `#${heading.id}`;
+			anchor.textContent = '#';
+			anchor.setAttribute('aria-label', `Link to section: ${heading.textContent ?? ''}`);
+			heading.prepend(anchor);
+		});
+</script>

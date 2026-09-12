@@ -1,0 +1,96 @@
+---
+import '@fontsource/archivo/600.css';
+import '@fontsource/archivo/700.css';
+import '@fontsource/open-sans/400.css';
+import '@fontsource/open-sans/400-italic.css';
+import '@fontsource/open-sans/600.css';
+import '@fontsource/open-sans/700.css';
+import '@fontsource/ibm-plex-mono/400.css';
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+import SparkMark from '../components/SparkMark.astro';
+
+interface Props {
+	title: string;
+	description?: string;
+	/** Theme colour for the page, inherited by everything through --theme-color. */
+	themeColor?: string;
+	/** Reading progress hairline under the header — long-form pages only. */
+	progress?: boolean;
+	/** Extra class on <main>, used by article pages to widen for the sidebar. */
+	mainClass?: string;
+}
+
+const {
+	title,
+	description = 'Data Scientist and Graph Enthusiast.',
+	themeColor,
+	progress = false,
+	mainClass,
+} = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<!-- The SVG is the header mark itself, crisp at any size; the .ico is the
+			fallback for browsers that ignore it. Both are built by `npm run favicon`
+			from the same source as the mark. -->
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<link rel="icon" href="/favicon.ico" sizes="32x32" />
+		<title>{title}</title>
+	</head>
+	<body style={themeColor ? `--theme-color: ${themeColor}` : undefined}>
+		<header class="site-header">
+			<nav class="container">
+				<a class="brand" href="/">
+					<SparkMark />
+					Simon Popelier
+				</a>
+				<div class="links">
+					<a href="/">Articles</a>
+					<a href="/sparks/">Sparks</a>
+					<a href="https://github.com/SimonPop">GitHub</a>
+					<a href="https://www.linkedin.com/in/simon-popelier/">LinkedIn</a>
+				</div>
+			</nav>
+			{progress && <div class="reading-progress" id="reading-progress"></div>}
+		</header>
+		<main class:list={['container', mainClass]}>
+			<slot />
+		</main>
+		<footer class="site-footer">
+			<div class="container site-footer-row">
+				<p>&copy; {new Date().getFullYear()} Simon Popelier</p>
+				<div class="links">
+					<a href="https://github.com/SimonPop">GitHub</a>
+					<a href="https://www.linkedin.com/in/simon-popelier/">LinkedIn</a>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>
+
+<script>
+	const bar = document.getElementById('reading-progress');
+	if (bar) {
+		let queued = false;
+		const update = () => {
+			queued = false;
+			const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+			const ratio = scrollable > 0 ? window.scrollY / scrollable : 0;
+			bar.style.width = `${Math.min(Math.max(ratio, 0), 1) * 100}%`;
+		};
+		const schedule = () => {
+			if (queued) return;
+			queued = true;
+			requestAnimationFrame(update);
+		};
+		window.addEventListener('scroll', schedule, { passive: true });
+		window.addEventListener('resize', schedule);
+		update();
+	}
+</script>

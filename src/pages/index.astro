@@ -1,0 +1,66 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SparkCard from '../components/SparkCard.astro';
+import { THEME_META } from '../lib/themes';
+
+const articles = (await getCollection('articles', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const recentSparks = (await getCollection('sparks', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
+	.slice(0, 5);
+
+// TODO(Simon): one line about what the site is, shown under the page title in
+// the same discreet style as the Sparks intro. Left empty on purpose — the
+// paragraph simply doesn't render until you write it, rather than shipping
+// placeholder text in someone else's voice.
+const intro = '';
+---
+
+<BaseLayout title="Simon Popelier">
+	<section>
+		<h1>Articles</h1>
+		{intro && <p class="page-intro">{intro}</p>}
+		<ul class="article-list">
+			{
+				articles.map((article) => {
+					const theme = THEME_META[article.data.theme];
+					return (
+						<li style={`--theme-color: ${theme.color}`}>
+							<span class="theme-badge">{theme.label}</span>
+							<a href={`/articles/${article.id}/`}>{article.data.title}</a>
+							<p class="summary">{article.data.summary}</p>
+							<time class="meta" datetime={article.data.date.toISOString()}>
+								{article.data.date.toLocaleDateString('en-US', {
+									year: 'numeric',
+									month: 'long',
+									day: 'numeric',
+								})}
+							</time>
+						</li>
+					);
+				})
+			}
+		</ul>
+	</section>
+
+	{
+		recentSparks.length > 0 && (
+			<section class="home-sparks">
+				<div class="section-head">
+					<h2>Sparks</h2>
+					<a class="section-link" href="/sparks/">
+						All sparks →
+					</a>
+				</div>
+				<div class="spark-grid">
+					{recentSparks.map((spark) => (
+						<SparkCard slug={spark.id} title={spark.data.title} date={spark.data.date} theme={spark.data.theme} />
+					))}
+				</div>
+			</section>
+		)
+	}
+</BaseLayout>
