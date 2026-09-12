@@ -31,7 +31,7 @@ They make for a special kind of structure due to their particular robustness to 
 
 ## Robustness
 
-Robustness for networks is often measured in terms of how difficult it is to split the graph apart when successively removing nodes. This comes from the [Percolation Theory](https://en.wikipedia.org/wiki/Percolation_theory) study and designates a network as robust if most of its nodes remain accessible to each other in case of successive failures. See [Network Robustness & Vulnerability](/articles/graph-robustness/) for a broader overview of these metrics and of the attack strategies used below.
+Robustness for networks is often measured in terms of how difficult it is to split the graph apart when successively removing nodes. This comes from the [Percolation Theory](https://en.wikipedia.org/wiki/Percolation_theory) study and designates a network as robust if most of its nodes remain accessible to each other in case of successive failures ([Network Robustness & Vulnerability](/articles/graph-robustness/)).
 
 In “most” of its nodes we have to understand, the nodes are part of the main [component](https://en.wikipedia.org/wiki/Component_(graph_theory)): the biggest group still connected.
 

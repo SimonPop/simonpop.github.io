@@ -17,5 +17,5 @@ A high mixing time means the walk stays trapped near its start for a long time, 
 
 <figure>
 <div id="connectivity-mixing-viz"></div>
-<figcaption>The exact same walker, tracked step by step — one graph forgets its start in a few hops, the other stays stuck for a long time.</figcaption>
+<figcaption>A walker takes one step at a time. The graph structure dictates its exploration pace.</figcaption>
 </figure>

@@ -210,7 +210,7 @@ $$
 0 \leq \lambda_2 \leq \kappa_v \leq \kappa_e
 $$
 
-with $\kappa_v$ the vertex connectivity and $\kappa_e$ the edge connectivity of the graph. This gives us quickly an approximation of that value which is in turn related to robustness. See [Graph Spectrum Insights: Expansion](/articles/graph-spectrum-insights-expansion/) for a deeper, more intuitive dive into what $\lambda_2$ tells us about a graph.
+with $\kappa_v$ the vertex connectivity and $\kappa_e$ the edge connectivity of the graph. This gives us quickly an approximation of that value which is in turn related to robustness ([Graph Spectrum Insights: Expansion](/articles/graph-spectrum-insights-expansion/)).
 
 - **Number of Spanning Trees:**
 
@@ -294,7 +294,7 @@ Just like in the brain network connections, another approach to optimize the dif
 
 - **Random edge rewiring**: removes a random edge and adds one between two randomly chosen nodes.
 
-This method is known to create onion-like structures with high-degree nodes in the center and decreasing degrees by radial distance to this center (Louzada et al., 2013). It has been shown to be a very robust structure — see [The Onion Topology](/articles/the-onion-topology/) for a dedicated, interactive deep dive into this structure.
+This method is known to create onion-like structures with high-degree nodes in the center and decreasing degrees by radial distance to this center (Louzada et al., 2013). It has been shown to be a very robust structure ([The Onion Topology](/articles/the-onion-topology/)).
 
 The following figure displays such a graph, where equal-degree edges are solid lines while inter-degree edges are dotted lines.
 

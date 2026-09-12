@@ -13,7 +13,7 @@ In graph language, the first philosophy is called homophily while the second het
 
 <figure>
 <div id="homophily-heterophily-viz"></div>
-<figcaption>Same 18 nodes, same two classes, same positions — only the wiring rule changes.</figcaption>
+<figcaption>Same 18 nodes, same two classes. Only the wiring rule changes!</figcaption>
 </figure>
 
 When you're building a graph, or teaching a model to do so, you can use one of these principles to your advantage. In practice this amounts to penalizing nodes with similar or dissimilar embeddings to connect.

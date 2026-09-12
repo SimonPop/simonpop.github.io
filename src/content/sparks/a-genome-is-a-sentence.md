@@ -14,5 +14,3 @@ For instance, DNA is usually cut into *k*-mers: fixed-length windows of *k* nucl
 <div id="kmers-viz"></div>
 <figcaption>6-merization of a 12-nucleotide sequence: jump the window by <em>k</em> for non-overlapping tokens, or slide it by 1 to get overlapping tokens.</figcaption>
 </figure>
-
-The analogy between a genome and a sentence isn't just a metaphor, it already lines up with a real unit of biological meaning.

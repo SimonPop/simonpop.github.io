@@ -15,7 +15,7 @@ They usually roughly agree: a well-connected node also tends to sit on a lot of 
 
 <figure>
 <div id="degree-betweenness-viz"></div>
-<figcaption>Same graph, same positions — only which node lights up changes with the metric.</figcaption>
+<figcaption>Change the evaluation metric and different node win. </figcaption>
 </figure>
 
 Neither ranking is "more correct". They're answering different questions. Who has the most direct connections? Who sits on the most paths between others? Which one matters depends on what you're trying to reason about.

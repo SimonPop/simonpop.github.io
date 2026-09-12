@@ -17,5 +17,3 @@ A subway network recovered purely from passenger flow tells you something real a
 </figure>
 
 However, striking a balance between model growth and graph interpretability can be difficult. Some models can learn graphs that measurably improve their predictions while no longer being human-readable.
-
-At that point you're not looking at the problem anymore, you're looking at how the network chose to represent the problem.

@@ -26,7 +26,7 @@ The primary motivation is performance. Framing a problem as a graph problem intr
 
 ### Explainability
 
-A second motivation is understanding the system itself. Graphs are easy to visualize and map naturally onto the problem domain. In our subway example, GSL could recover the station network directly from data — the idea behind Graph WaveNet (Wu et al., 2019).
+A second motivation is understanding the system itself. Graphs are easy to visualize and map naturally onto the problem domain. In our subway example, GSL could recover the station network directly from data: the idea behind Graph WaveNet (Wu et al., 2019).
 
 This benefit has limits. As a network grows, the graph it learns may diverge from one a human would draw. MTGNN (Wu et al., 2020), for instance, improves prediction accuracy but produces a graph that is not human-readable. At that point we are analyzing how the network represents the problem, not the problem itself: explainability rather than interpretability.
 

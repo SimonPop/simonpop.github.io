@@ -15,7 +15,7 @@ Removing a single node redistributes its traffic onto whatever remains. In that 
 
 <figure>
 <div id="cascade-viz"></div>
-<figcaption>Same hub-and-spoke network, same trigger — only the shared tolerance changes whether the failure stays contained.</figcaption>
+<figcaption>Same failure, different scenarios.</figcaption>
 </figure>
 
 Toggle the network's operating regime, then fail the hub and watch where its load goes. With generous slack, the survivors shrug it off. Maximized to the same tight margin everywhere, one failure is enough to take the whole thing down.

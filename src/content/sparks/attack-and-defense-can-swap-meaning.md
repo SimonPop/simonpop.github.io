@@ -18,4 +18,4 @@ The two paradigms actually share the same math: on a network, an epidemic sustai
 <figcaption>Drag the slider to vary the edge-removal probability <em>p</em> — the "decoupling" side of the duality: the same fragmenting lattice is also what an epidemic needs to stay contained.</figcaption>
 </figure>
 
-The exact same quantity that makes a network hard to tear apart is what makes it easy to infect.
+A network that is hard to break is also easier to infect.
