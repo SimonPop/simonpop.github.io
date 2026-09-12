@@ -1,0 +1,355 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="460.8pt" height="309.6pt" viewBox="0 0 460.8 309.6" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-08-10T23:59:13.468727</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.1, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 309.6 
+L 460.8 309.6 
+L 460.8 0 
+L 0 0 
+L 0 309.6 
+z
+" style="fill: none"/>
+  </g>
+  <g id="axes_1">
+   <g id="line2d_1">
+    <path d="M 7.2 100.8 
+L 453.6 100.8 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #e2e4ec; stroke-width: 2; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 7.2 201.6 
+L 453.6 201.6 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #e2e4ec; stroke-width: 2; stroke-linecap: square"/>
+   </g>
+   <g id="patch_2">
+    <path d="M 263.797998 50.4 
+Q 269.999887 50.4 273.965707 50.4 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 269.165707 48 
+L 273.965707 50.4 
+L 269.165707 52.8 
+z
+" clip-path="url(#pfface3312c)" style="fill: #666c7e; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 166.600635 151.2 
+Q 169.201735 151.2 169.566767 151.2 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 165.166767 149 
+L 169.566767 151.2 
+L 165.166767 153.4 
+z
+" clip-path="url(#pfface3312c)" style="fill: #666c7e; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 217.000635 151.2 
+Q 219.601735 151.2 219.966767 151.2 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 215.566767 149 
+L 219.966767 151.2 
+L 215.566767 153.4 
+z
+" clip-path="url(#pfface3312c)" style="fill: #666c7e; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 267.400635 151.2 
+Q 270.001735 151.2 270.366767 151.2 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 265.966767 149 
+L 270.366767 151.2 
+L 265.966767 153.4 
+z
+" clip-path="url(#pfface3312c)" style="fill: #666c7e; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 317.800635 151.2 
+Q 320.401735 151.2 320.766767 151.2 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 316.366767 149 
+L 320.766767 151.2 
+L 316.366767 153.4 
+z
+" clip-path="url(#pfface3312c)" style="fill: #666c7e; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 368.200635 151.2 
+Q 370.801735 151.2 371.166767 151.2 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 366.766767 149 
+L 371.166767 151.2 
+L 366.766767 153.4 
+z
+" clip-path="url(#pfface3312c)" style="fill: #666c7e; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 263.797998 255.6 
+Q 269.999887 255.6 273.965707 255.6 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 269.165707 253.2 
+L 273.965707 255.6 
+L 269.165707 258 
+z
+" clip-path="url(#pfface3312c)" style="fill: #666c7e; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 279.015381 276.251151 
+Q 269.9994 278.508999 263.152488 276.794117 
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+    <path d="M 267.225572 280.288396 
+L 263.152488 276.794117 
+L 268.391762 275.632217 
+z
+" clip-path="url(#pfface3312c)" style="fill: #666c7e; stroke: #666c7e; stroke-width: 2; stroke-linecap: round"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 14.4 302.4 
+L 446.4 302.4 
+Q 453.6 302.4 453.6 295.2 
+L 453.6 14.4 
+Q 453.6 7.2 446.4 7.2 
+L 14.4 7.2 
+Q 7.2 7.2 7.2 14.4 
+L 7.2 295.2 
+Q 7.2 302.4 14.4 302.4 
+L 14.4 302.4 
+z
+" clip-path="url(#pfface3312c)" style="fill: none; stroke: #e2e4ec; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 18 59.76 
+L 75.6 59.76 
+Q 79.2 59.76 79.2 56.16 
+L 79.2 44.64 
+Q 79.2 41.04 75.6 41.04 
+L 18 41.04 
+Q 14.4 41.04 14.4 44.64 
+L 14.4 56.16 
+Q 14.4 59.76 18 59.76 
+z
+" clip-path="url(#pfface3312c)" style="fill: #f5f6fa; stroke: #e2e4ec; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 202.32 70.56 
+L 258.48 70.56 
+Q 262.8 70.56 262.8 66.24 
+L 262.8 34.56 
+Q 262.8 30.24 258.48 30.24 
+L 202.32 30.24 
+Q 198 30.24 198 34.56 
+L 198 66.24 
+Q 198 70.56 202.32 70.56 
+z
+" clip-path="url(#pfface3312c)" style="fill: #e9ecfa; stroke: #4a5fd9; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 281.52 70.56 
+L 337.68 70.56 
+Q 342 70.56 342 66.24 
+L 342 34.56 
+Q 342 30.24 337.68 30.24 
+L 281.52 30.24 
+Q 277.2 30.24 277.2 34.56 
+L 277.2 66.24 
+Q 277.2 70.56 281.52 70.56 
+z
+" clip-path="url(#pfface3312c)" style="fill: #f1f1f2; stroke: #666c7e; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 126 171.36 
+L 162 171.36 
+Q 165.6 171.36 165.6 167.76 
+L 165.6 134.64 
+Q 165.6 131.04 162 131.04 
+L 126 131.04 
+Q 122.4 131.04 122.4 134.64 
+L 122.4 167.76 
+Q 122.4 171.36 126 171.36 
+z
+" clip-path="url(#pfface3312c)" style="fill: #e9ecfa; stroke: #4a5fd9; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 176.4 171.36 
+L 212.4 171.36 
+Q 216 171.36 216 167.76 
+L 216 134.64 
+Q 216 131.04 212.4 131.04 
+L 176.4 131.04 
+Q 172.8 131.04 172.8 134.64 
+L 172.8 167.76 
+Q 172.8 171.36 176.4 171.36 
+z
+" clip-path="url(#pfface3312c)" style="fill: #f1f1f2; stroke: #666c7e; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 226.8 171.36 
+L 262.8 171.36 
+Q 266.4 171.36 266.4 167.76 
+L 266.4 134.64 
+Q 266.4 131.04 262.8 131.04 
+L 226.8 131.04 
+Q 223.2 131.04 223.2 134.64 
+L 223.2 167.76 
+Q 223.2 171.36 226.8 171.36 
+z
+" clip-path="url(#pfface3312c)" style="fill: #e9ecfa; stroke: #4a5fd9; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_17">
+    <path d="M 277.2 171.36 
+L 313.2 171.36 
+Q 316.8 171.36 316.8 167.76 
+L 316.8 134.64 
+Q 316.8 131.04 313.2 131.04 
+L 277.2 131.04 
+Q 273.6 131.04 273.6 134.64 
+L 273.6 167.76 
+Q 273.6 171.36 277.2 171.36 
+z
+" clip-path="url(#pfface3312c)" style="fill: #f1f1f2; stroke: #666c7e; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_18">
+    <path d="M 327.6 171.36 
+L 363.6 171.36 
+Q 367.2 171.36 367.2 167.76 
+L 367.2 134.64 
+Q 367.2 131.04 363.6 131.04 
+L 327.6 131.04 
+Q 324 131.04 324 134.64 
+L 324 167.76 
+Q 324 171.36 327.6 171.36 
+z
+" clip-path="url(#pfface3312c)" style="fill: #e9ecfa; stroke: #4a5fd9; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_19">
+    <path d="M 378 171.36 
+L 414 171.36 
+Q 417.6 171.36 417.6 167.76 
+L 417.6 134.64 
+Q 417.6 131.04 414 131.04 
+L 378 131.04 
+Q 374.4 131.04 374.4 134.64 
+L 374.4 167.76 
+Q 374.4 171.36 378 171.36 
+z
+" clip-path="url(#pfface3312c)" style="fill: #f1f1f2; stroke: #666c7e; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_20">
+    <path d="M 18 160.56 
+L 75.6 160.56 
+Q 79.2 160.56 79.2 156.96 
+L 79.2 145.44 
+Q 79.2 141.84 75.6 141.84 
+L 18 141.84 
+Q 14.4 141.84 14.4 145.44 
+L 14.4 156.96 
+Q 14.4 160.56 18 160.56 
+z
+" clip-path="url(#pfface3312c)" style="fill: #f5f6fa; stroke: #e2e4ec; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_21">
+    <path d="M 18 264.96 
+L 75.6 264.96 
+Q 79.2 264.96 79.2 261.36 
+L 79.2 249.84 
+Q 79.2 246.24 75.6 246.24 
+L 18 246.24 
+Q 14.4 246.24 14.4 249.84 
+L 14.4 261.36 
+Q 14.4 264.96 18 264.96 
+z
+" clip-path="url(#pfface3312c)" style="fill: #f5f6fa; stroke: #e2e4ec; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_22">
+    <path d="M 202.32 275.76 
+L 258.48 275.76 
+Q 262.8 275.76 262.8 271.44 
+L 262.8 239.76 
+Q 262.8 235.44 258.48 235.44 
+L 202.32 235.44 
+Q 198 235.44 198 239.76 
+L 198 271.44 
+Q 198 275.76 202.32 275.76 
+z
+" clip-path="url(#pfface3312c)" style="fill: #e9ecfa; stroke: #4a5fd9; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_23">
+    <path d="M 281.52 275.76 
+L 337.68 275.76 
+Q 342 275.76 342 271.44 
+L 342 239.76 
+Q 342 235.44 337.68 235.44 
+L 281.52 235.44 
+Q 277.2 235.44 277.2 239.76 
+L 277.2 271.44 
+Q 277.2 275.76 281.52 275.76 
+z
+" clip-path="url(#pfface3312c)" style="fill: #f1f1f2; stroke: #666c7e; stroke-width: 2; stroke-linejoin: miter"/>
+   </g>
+   <g id="text_1">
+    <text style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-anchor: middle; fill: #666c7e" x="46.8" y="53.517656" transform="rotate(-0 46.8 53.517656)">Joint</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 14px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #4a5fd9" x="230.4" y="54.036719" transform="rotate(-0 230.4 54.036719)">GSL</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 14px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #191b22" x="309.6" y="54.037266" transform="rotate(-0 309.6 54.037266)">Pred</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 12px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #4a5fd9" x="144" y="154.317187" transform="rotate(-0 144 154.317187)">GSL</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 12px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #191b22" x="194.4" y="154.317656" transform="rotate(-0 194.4 154.317656)">Pred</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 12px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #4a5fd9" x="244.8" y="154.317187" transform="rotate(-0 244.8 154.317187)">GSL</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 12px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #191b22" x="295.2" y="154.317656" transform="rotate(-0 295.2 154.317656)">Pred</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 12px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #4a5fd9" x="345.6" y="154.317187" transform="rotate(-0 345.6 154.317187)">GSL</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 12px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #191b22" x="396" y="154.317656" transform="rotate(-0 396 154.317656)">Pred</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-anchor: middle; fill: #666c7e" x="46.8" y="154.317656" transform="rotate(-0 46.8 154.317656)">Adaptive</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 12px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-anchor: middle; fill: #666c7e" x="46.8" y="258.717656" transform="rotate(-0 46.8 258.717656)">Iterative</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 14px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #4a5fd9" x="230.4" y="259.236719" transform="rotate(-0 230.4 259.236719)">GSL</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 14px; font-family: Archivo, sans-serif; text-anchor: middle; fill: #191b22" x="309.6" y="259.237266" transform="rotate(-0 309.6 259.237266)">Pred</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 11px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; text-anchor: middle; fill: #666c7e" x="270" y="294.457852" transform="rotate(-0 270 294.457852)">until condition satisfied</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pfface3312c">
+   <rect x="0" y="0" width="460.8" height="309.6"/>
+  </clipPath>
+ </defs>
+</svg>

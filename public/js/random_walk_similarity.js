@@ -21,6 +21,9 @@ function graph(data) {
     const posx_offset = 300;
     const posy_offset = 200;
     
+    const idToNode = {};
+    data.nodes.forEach(function (n) { idToNode[n.id] = n; });
+
     var link = svg
     .selectAll("line")
     .data(data.links)
@@ -28,6 +31,10 @@ function graph(data) {
     .append("line")
         .style("stroke", "#aaa")
         .style("stroke-width", 2)
+        .attr("x1", function(d) { return posx_offset+pos_scale*idToNode[d.source].ox; })
+        .attr("y1", function(d) { return posy_offset+pos_scale*idToNode[d.source].oy; })
+        .attr("x2", function(d) { return posx_offset+pos_scale*idToNode[d.target].ox; })
+        .attr("y2", function(d) { return posy_offset+pos_scale*idToNode[d.target].oy; });
 
     var nodes = svg
     .selectAll("circle")
@@ -40,21 +47,6 @@ function graph(data) {
         .attr("stroke", "rgb(170, 170, 170)").style('stroke-width', 3)
         .attr("cx", function (d) { return posx_offset+pos_scale*d.ox; })
         .attr("cy", function(d) { return posy_offset+pos_scale*d.oy; });
-
-    var simulation = d3.forceSimulation(data.nodes) 
-        .force("link", d3.forceLink()               
-            .id(function(d) { return d.id; })    
-            .links(data.links)            
-        )
-        .on("end", ticked);
-
-    function ticked() {
-    link
-        .attr("x1", function(d) {return posx_offset+pos_scale*d.source.ox; })
-        .attr("y1", function(d) { return posy_offset+pos_scale*d.source.oy; })
-        .attr("x2", function(d) { return posx_offset+pos_scale*d.target.ox; })
-        .attr("y2", function(d) { return posy_offset+pos_scale*d.target.oy; });
-    }
 
     nodes
     .on('mouseover', function (d) {
