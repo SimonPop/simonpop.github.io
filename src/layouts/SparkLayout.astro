@@ -1,6 +1,8 @@
 ---
 import BaseLayout from './BaseLayout.astro';
+import SparkOrb from '../components/SparkOrb.astro';
 import { THEME_META, type ThemeKey } from '../lib/themes';
+import { SPARK_PALETTE } from '../lib/spark-art';
 
 interface Props {
 	slug: string;
@@ -44,9 +46,10 @@ const formattedDate = date.toLocaleDateString('en-US', {
 		}
 		{
 			otherSlugs.length > 0 && (
-				<button class="random-spark spark-next" id="random-spark" data-other-slugs={JSON.stringify(otherSlugs)}>
-					Next random spark →
-				</button>
+				<div class="spark-next" data-other-slugs={JSON.stringify(otherSlugs)}>
+					<SparkOrb seed={`next-${slug}`} colors={SPARK_PALETTE} size={130} ariaLabel="Jump to a random spark" />
+					<p class="spark-next-hint">Next random spark</p>
+				</div>
 			)
 		}
 	</article>
@@ -55,9 +58,10 @@ const formattedDate = date.toLocaleDateString('en-US', {
 </BaseLayout>
 
 <script>
-	const btn = document.getElementById('random-spark');
+	const wrap = document.querySelector<HTMLElement>('.spark-next');
+	const btn = wrap?.querySelector('.spark-orb');
 	btn?.addEventListener('click', () => {
-		const slugs = JSON.parse(btn.dataset.otherSlugs ?? '[]') as string[];
+		const slugs = JSON.parse(wrap?.dataset.otherSlugs ?? '[]') as string[];
 		if (slugs.length === 0) return;
 		const pick = slugs[Math.floor(Math.random() * slugs.length)];
 		window.location.href = `/sparks/${pick}/`;
