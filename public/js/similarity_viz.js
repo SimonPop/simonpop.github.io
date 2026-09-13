@@ -28,136 +28,186 @@
 
 	const tint = (color, t) => d3.interpolateRgb('#ffffff', color)(t);
 
-	const width = 620, height = 250;
-	const svg = d3.select(root).append('svg')
-		.attr('viewBox', `0 0 ${width} ${height}`)
-		.attr('width', '100%');
-
-	const rowY = {};
-	nodesOrder.forEach((d, i) => { rowY[d] = 205 - i * 40; });
-
-	// Row content spans from the node circle (starts ~x=11) to the last feature
-	// square (ends at 55 + 4*26 = 159); the highlight ring must cover all of it.
-	const ringLeft = 8, ringRight = 55 + 4 * 26 + 6;
-
-	// --- Rows: node + feature vector, one square per dimension shaded by its value ---
-	// All squares share the same color scale (not one hue per dimension) so that two
-	// similar vectors visibly produce the same shading pattern at a glance.
-	const rings = {};
-	nodesOrder.forEach((d) => {
-		const y = rowY[d];
-
-		rings[d] = svg.append('rect')
-			.attr('x', ringLeft).attr('y', y - 19)
-			.attr('width', ringRight - ringLeft).attr('height', 38)
-			.attr('rx', 8)
-			.attr('fill', 'none')
-			.attr('stroke', themeColor)
-			.attr('stroke-width', 2)
-			.attr('opacity', 0)
-			.style('pointer-events', 'none');
-
-		const g = svg.append('g').attr('class', 'sim-row').attr('data-id', d).style('cursor', 'pointer');
-
-		g.append('circle')
-			.attr('cx', 25).attr('cy', y).attr('r', 14)
-			.attr('fill', 'var(--bg)').attr('stroke', 'var(--text)').attr('stroke-width', 1.5);
-		g.append('text')
-			.attr('x', 25).attr('y', y + 5).attr('text-anchor', 'middle')
-			.attr('font-family', 'var(--font-display)').attr('font-weight', 700).attr('font-size', 13)
-			.attr('fill', 'var(--text)').style('pointer-events', 'none')
-			.text(d);
-
-		vectors[d].forEach((v, j) => {
-			g.append('rect')
-				.attr('x', 55 + j * 26).attr('y', y - 11)
-				.attr('width', 22).attr('height', 22).attr('rx', 3)
-				.attr('fill', tint(themeColor, v))
-				.attr('stroke', 'var(--border)').attr('stroke-width', 1);
-		});
-	});
-
-	// --- Formula: f_sim(vec_x, vec_y) = <result square + value>, live-updated ---
-	const fx = 250, fy = 125;
-
-	const hint = svg.append('text')
-		.attr('x', fx).attr('y', fy - 55)
-		.attr('font-family', 'var(--font-sans)').attr('font-size', 11).attr('fill', mutedColor);
-
-	const formula = svg.append('text')
-		.attr('x', fx).attr('y', fy)
-		.attr('font-family', 'var(--font-mono)').attr('font-size', 16).attr('fill', 'var(--text)');
-
-	const resultSquare = svg.append('rect')
-		.attr('width', 26).attr('height', 26).attr('rx', 4)
-		.attr('y', fy - 19)
-		.attr('stroke', 'var(--text)').attr('stroke-width', 1.5)
-		.attr('fill', 'var(--surface)');
-
-	const resultValue = svg.append('text')
-		.attr('y', fy + 40)
-		.attr('font-family', 'var(--font-mono)').attr('font-size', 13).attr('fill', 'var(--text)')
-		.attr('text-anchor', 'middle');
-
-	function render(a, b) {
-		if (!a) {
-			hint.text('Click a node to pin it as the first vector.');
-			formula.text('f_sim(vec_x, vec_y) = ?');
-		} else if (!b || b === a) {
-			hint.text(`Hover another node to compare it with vec_${a}.`);
-			formula.text(`f_sim(vec_${a}, vec_?) = `);
-		} else {
-			hint.text(`Comparing vec_${a} against vec_${b}. Click a node to pin a different one.`);
-			formula.text(`f_sim(vec_${a}, vec_${b}) = `);
-		}
-
-		const fw = formula.node().getComputedTextLength();
-		const sx = fx + fw + 6;
-		resultSquare.attr('x', sx);
-
-		if (a && b && b !== a) {
-			const sim = cosine(vectors[a], vectors[b]);
-			resultSquare.attr('fill', tint(themeColor, sim)).attr('stroke', 'var(--text)');
-			resultValue.attr('x', sx + 13).text(sim.toFixed(2));
-		} else {
-			resultSquare.attr('fill', 'var(--surface)').attr('stroke', 'var(--border)');
-			resultValue.attr('x', sx + 13).text('');
-		}
-	}
-
-	function updateRings(a, b) {
-		nodesOrder.forEach((d) => {
-			rings[d].attr('opacity', d === a ? 1 : d === b ? 0.4 : 0);
-		});
-	}
+	const NARROW_BREAKPOINT = 480;
 
 	let pinned = 'a';
 	let hovered = 'b';
+	let currentIsNarrow = null;
 
-	function refresh() {
-		updateRings(pinned, hovered);
-		render(pinned, hovered);
-	}
+	function draw() {
+		const isNarrow = root.getBoundingClientRect().width < NARROW_BREAKPOINT;
+		if (isNarrow === currentIsNarrow) return;
+		currentIsNarrow = isNarrow;
 
-	svg.selectAll('g.sim-row')
-		.on('click', function () {
-			const id = d3.select(this).attr('data-id');
-			if (pinned === id) {
-				pinned = null;
-				hovered = null;
-			} else {
-				pinned = id;
-				if (hovered === pinned) hovered = null;
-			}
-			refresh();
-		})
-		.on('mouseenter', function () {
-			const id = d3.select(this).attr('data-id');
-			if (pinned && id !== pinned) {
-				hovered = id;
-				refresh();
-			}
+		root.innerHTML = '';
+
+		// Rows and formula sit side by side on wide screens; on narrow ones the
+		// formula moves below the rows instead, so the coordinate space grows
+		// taller rather than everything shrinking to fit the width.
+		const width = isNarrow ? 340 : 620;
+		const height = isNarrow ? 360 : 250;
+		const rowsBase = isNarrow ? 190 : 205;
+		const fx = isNarrow ? 20 : 250;
+		const fy = isNarrow ? 290 : 125;
+		const hintOffset = isNarrow ? 62 : 55;
+		const hintMaxWidth = width - fx - 15;
+
+		const svg = d3.select(root).append('svg')
+			.attr('viewBox', `0 0 ${width} ${height}`)
+			.attr('width', '100%');
+
+		const rowY = {};
+		nodesOrder.forEach((d, i) => { rowY[d] = rowsBase - i * 40; });
+
+		// Row content spans from the node circle (starts ~x=11) to the last feature
+		// square (ends at 55 + 4*26 = 159); the highlight ring must cover all of it.
+		const ringLeft = 8, ringRight = 55 + 4 * 26 + 6;
+
+		// --- Rows: node + feature vector, one square per dimension shaded by its value ---
+		// All squares share the same color scale (not one hue per dimension) so that two
+		// similar vectors visibly produce the same shading pattern at a glance.
+		const rings = {};
+		nodesOrder.forEach((d) => {
+			const y = rowY[d];
+
+			rings[d] = svg.append('rect')
+				.attr('x', ringLeft).attr('y', y - 19)
+				.attr('width', ringRight - ringLeft).attr('height', 38)
+				.attr('rx', 8)
+				.attr('fill', 'none')
+				.attr('stroke', themeColor)
+				.attr('stroke-width', 2)
+				.attr('opacity', 0)
+				.style('pointer-events', 'none');
+
+			const g = svg.append('g').attr('class', 'sim-row').attr('data-id', d).style('cursor', 'pointer');
+
+			g.append('circle')
+				.attr('cx', 25).attr('cy', y).attr('r', 14)
+				.attr('fill', 'var(--bg)').attr('stroke', 'var(--text)').attr('stroke-width', 1.5);
+			g.append('text')
+				.attr('x', 25).attr('y', y + 5).attr('text-anchor', 'middle')
+				.attr('font-family', 'var(--font-display)').attr('font-weight', 700).attr('font-size', 13)
+				.attr('fill', 'var(--text)').style('pointer-events', 'none')
+				.text(d);
+
+			vectors[d].forEach((v, j) => {
+				g.append('rect')
+					.attr('x', 55 + j * 26).attr('y', y - 11)
+					.attr('width', 22).attr('height', 22).attr('rx', 3)
+					.attr('fill', tint(themeColor, v))
+					.attr('stroke', 'var(--border)').attr('stroke-width', 1);
+			});
 		});
 
-	refresh();
+		// --- Formula: f_sim(vec_x, vec_y) = <result square + value>, live-updated ---
+		const hint = svg.append('text')
+			.attr('x', fx).attr('y', fy - hintOffset)
+			.attr('font-family', 'var(--font-sans)').attr('font-size', 11).attr('fill', mutedColor);
+
+		// Wraps `str` onto as many tspans as needed to stay under `maxWidth`, since a
+		// long hint sentence next to a narrow, stacked layout would otherwise run
+		// straight off the edge of the SVG's viewBox and get clipped.
+		function wrapText(textSel, str, maxWidth, lineHeight) {
+			const x = textSel.attr('x');
+			const words = str.split(/\s+/);
+			textSel.text(null);
+			let line = [];
+			let tspan = textSel.append('tspan').attr('x', x).attr('dy', 0);
+			words.forEach((word) => {
+				line.push(word);
+				tspan.text(line.join(' '));
+				if (line.length > 1 && tspan.node().getComputedTextLength() > maxWidth) {
+					line.pop();
+					tspan.text(line.join(' '));
+					line = [word];
+					tspan = textSel.append('tspan').attr('x', x).attr('dy', lineHeight).text(word);
+				}
+			});
+		}
+
+		const formula = svg.append('text')
+			.attr('x', fx).attr('y', fy)
+			.attr('font-family', 'var(--font-mono)').attr('font-size', 16).attr('fill', 'var(--text)');
+
+		const resultSquare = svg.append('rect')
+			.attr('width', 26).attr('height', 26).attr('rx', 4)
+			.attr('y', fy - 19)
+			.attr('stroke', 'var(--text)').attr('stroke-width', 1.5)
+			.attr('fill', 'var(--surface)');
+
+		const resultValue = svg.append('text')
+			.attr('y', fy + 40)
+			.attr('font-family', 'var(--font-mono)').attr('font-size', 13).attr('fill', 'var(--text)')
+			.attr('text-anchor', 'middle');
+
+		function render(a, b) {
+			let hintText;
+			if (!a) {
+				hintText = 'Click a node to pin it as the first vector.';
+				formula.text('f_sim(vec_x, vec_y) = ?');
+			} else if (!b || b === a) {
+				hintText = `Hover another node to compare it with vec_${a}.`;
+				formula.text(`f_sim(vec_${a}, vec_?) = `);
+			} else {
+				hintText = `Comparing vec_${a} against vec_${b}. Click a node to pin a different one.`;
+				formula.text(`f_sim(vec_${a}, vec_${b}) = `);
+			}
+			wrapText(hint, hintText, hintMaxWidth, 13);
+
+			const fw = formula.node().getComputedTextLength();
+			const sx = fx + fw + 6;
+			resultSquare.attr('x', sx);
+
+			if (a && b && b !== a) {
+				const sim = cosine(vectors[a], vectors[b]);
+				resultSquare.attr('fill', tint(themeColor, sim)).attr('stroke', 'var(--text)');
+				resultValue.attr('x', sx + 13).text(sim.toFixed(2));
+			} else {
+				resultSquare.attr('fill', 'var(--surface)').attr('stroke', 'var(--border)');
+				resultValue.attr('x', sx + 13).text('');
+			}
+		}
+
+		function updateRings(a, b) {
+			nodesOrder.forEach((d) => {
+				rings[d].attr('opacity', d === a ? 1 : d === b ? 0.4 : 0);
+			});
+		}
+
+		function refresh() {
+			updateRings(pinned, hovered);
+			render(pinned, hovered);
+		}
+
+		svg.selectAll('g.sim-row')
+			.on('click', function () {
+				const id = d3.select(this).attr('data-id');
+				if (pinned === id) {
+					pinned = null;
+					hovered = null;
+				} else {
+					pinned = id;
+					if (hovered === pinned) hovered = null;
+				}
+				refresh();
+			})
+			.on('mouseenter', function () {
+				const id = d3.select(this).attr('data-id');
+				if (pinned && id !== pinned) {
+					hovered = id;
+					refresh();
+				}
+			});
+
+		refresh();
+	}
+
+	draw();
+
+	let resizeTimer;
+	window.addEventListener('resize', () => {
+		clearTimeout(resizeTimer);
+		resizeTimer = setTimeout(draw, 150);
+	});
 })();
