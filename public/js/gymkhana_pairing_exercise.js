@@ -4,7 +4,7 @@
   root.style("flex-direction", "column").style("align-items", "center");
 
   const articleEl = document.querySelector(".article");
-  const themeColor = (articleEl && getComputedStyle(articleEl).getPropertyValue("--theme-color").trim()) || "#4a5fd9";
+  const themeColor = (articleEl && getComputedStyle(articleEl).getPropertyValue("--theme-color").trim()) || "#0d7377";
   const cutColor = "#b8433d";
   const okColor = "#2e8b57";
 

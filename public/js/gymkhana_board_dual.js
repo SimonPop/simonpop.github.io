@@ -4,7 +4,7 @@
   root.style("flex-direction", "column").style("align-items", "center");
 
   const articleEl = document.querySelector(".article");
-  const blueColor = (articleEl && getComputedStyle(articleEl).getPropertyValue("--theme-color").trim()) || "#4a5fd9";
+  const blueColor = (articleEl && getComputedStyle(articleEl).getPropertyValue("--theme-color").trim()) || "#0d7377";
   const redColor = "#b8433d";
 
   // Bridg-it's real board: a grid of dots colored like a checkerboard by

@@ -13,7 +13,7 @@
 
 	const articleEl = document.querySelector('.article');
 	const articleStyle = articleEl ? getComputedStyle(articleEl) : null;
-	const themeColor = (articleStyle && articleStyle.getPropertyValue('--theme-color').trim()) || '#4a5fd9';
+	const themeColor = (articleStyle && articleStyle.getPropertyValue('--theme-color').trim()) || '#0d7377';
 	const mutedColor = (articleStyle && articleStyle.getPropertyValue('--text-muted').trim()) || '#666c7e';
 
 	function cosine(u, v) {

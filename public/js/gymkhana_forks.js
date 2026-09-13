@@ -4,7 +4,7 @@
   root.style("flex-direction", "row").style("flex-wrap", "wrap").style("justify-content", "center").style("align-items", "flex-start").style("gap", "1.5rem");
 
   const articleEl = document.querySelector(".article");
-  const blueColor = (articleEl && getComputedStyle(articleEl).getPropertyValue("--theme-color").trim()) || "#4a5fd9";
+  const blueColor = (articleEl && getComputedStyle(articleEl).getPropertyValue("--theme-color").trim()) || "#0d7377";
   const goldColor = "#c2760f";
   const mutedColor = "var(--text-muted)";
 

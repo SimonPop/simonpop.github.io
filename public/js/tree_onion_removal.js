@@ -4,7 +4,7 @@
   root.style("flex-direction", "column").style("align-items", "center");
 
   const articleEl = document.querySelector(".article");
-  const themeColor = (articleEl && getComputedStyle(articleEl).getPropertyValue("--theme-color").trim()) || "#4a5fd9";
+  const themeColor = (articleEl && getComputedStyle(articleEl).getPropertyValue("--theme-color").trim()) || "#0d7377";
   const fadedColor = "#c7cad6";
 
   // A small "decreasingly branching tree": one hub connected to 4 branches,
